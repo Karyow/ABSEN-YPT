@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absen Tracker - System Presensi Modern</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- TOP HEADER / NAVBAR -->
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/10 p-2 rounded-xl backdrop-blur-md border border-white/20">
+                    <i class="fa-solid fa-clock-rotate-left text-xl text-indigo-200"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-wide">ABSEN TRACKER</h1>
+                    <p class="text-[11px] text-indigo-200 font-medium">Sistem Presensi & Laporan Harian</p>
+                </div>
+            </div>
+
+            <!-- User Status & Logout -->
+            <div id="navUserArea" class="hidden flex items-center space-x-3">
+                <div class="text-right hidden sm:block">
+                    <div id="navUserName" class="text-xs font-bold leading-tight">User Name</div>
+                    <span id="navUserRole" class="inline-block text-[10px] bg-indigo-900/60 text-indigo-200 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">Role</span>
+                </div>
+                <button onclick="logout()" class="bg-indigo-800 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="hidden sm:inline">Keluar</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= PAGE 1: LOGIN SECTION ================= -->
+        <section id="loginSection" class="max-w-md mx-auto my-8">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 text-white text-center">
+                    <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-3 backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-user-shield text-3xl text-indigo-200"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">Masuk ke Sistem</h2>
+                    <p class="text-xs text-indigo-200 mt-1">Silakan masukkan akun Anda untuk melanjutkan</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Pilih Akun / Username</label>
+                        <select id="loginUserSelect" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                            <optgroup label="Anggota Tim (User)">
+                                <option value="RAKSA">RAKSA (User)</option>
+                                <option value="GALUH">GALUH (User)</option>
+                                <option value="KARYO">KARYO (User)</option>
+                            </optgroup>
+                            <optgroup label="Administrator">
+                                <option value="ADMIN">ADMINISTRATOR (Admin)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Kata Sandi (Password)</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                        <p class="text-[11px] text-slate-400 mt-1">
+                            <i class="fa-solid fa-circle-info"></i> Password User: <code class="bg-slate-100 px-1 rounded text-indigo-600 font-bold">123456</code> | Admin: <code class="bg-slate-100 px-1 rounded text-indigo-600 font-bold">admin123</code>
+                        </p>
+                    </div>
+
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-indigo-200 transition duration-150 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        Masuk Sekarang
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: USER DASHBOARD ================= -->
+        <section id="userDashboardSection" class="hidden space-y-6">
+            
+            <!-- Today's Quick Status Header Card -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xl font-bold text-slate-800">Halo, <span id="userDisplayName" class="text-indigo-600">User</span> 👋</h2>
+                        <span id="userTodayBadge" class="text-xs bg-slate-100 font-bold px-2.5 py-1 rounded-full text-slate-600">Belum Absen Hari Ini</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1" id="userCurrentDateText">Senin, 19 Oktober 2026</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <!-- Quick Actions Buttons -->
+                    <button id="btnOpenInModal" onclick="openAbsenModal('IN')" class="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> Absen Masuk
+                    </button>
+                    <button id="btnOpenOutModal" onclick="openAbsenModal('OUT')" class="flex-1 md:flex-none bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-amber-200 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Absen Pulang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Today Status Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Absen Masuk Status Card -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Status Absen Masuk</span>
+                        <div id="userInTime" class="text-lg font-extrabold text-slate-800">-- : --</div>
+                        <div id="userInFlag" class="text-xs font-semibold text-slate-500">Belum Melakukan Absen</div>
+                    </div>
+                    <div id="userInIcon" class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 text-xl">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </div>
+                </div>
+
+                <!-- Absen Pulang Status Card -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Status Absen Pulang</span>
+                        <div id="userOutTime" class="text-lg font-extrabold text-slate-800">-- : --</div>
+                        <div id="userOutFlag" class="text-xs font-semibold text-slate-500">Belum Melakukan Absen</div>
+                    </div>
+                    <div id="userOutIcon" class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 text-xl">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Attendance History Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-history text-indigo-600"></i> Riwayat Absensi Pribadi Saya
+                    </h3>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 uppercase tracking-wider font-bold border-b border-slate-200">
+                                <th class="py-3 px-4">Tanggal</th>
+                                <th class="py-3 px-4">Status Masuk</th>
+                                <th class="py-3 px-4">Jam Masuk</th>
+                                <th class="py-3 px-4">Jam Pulang</th>
+                                <th class="py-3 px-4">Laporan Pekerjaan</th>
+                                <th class="py-3 px-4 text-center">Bukti Foto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userHistoryTableBody" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= PAGE 3: ADMIN DASHBOARD ================= -->
+        <section id="adminDashboardSection" class="hidden space-y-6">
+            
+            <!-- Admin Controls Header -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-indigo-600"></i> Dashboard Administrator
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Kelola dan pantau seluruh kehadiran & laporan harian tim</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-semibold">
+                        <i class="fa-solid fa-calendar-days text-slate-400"></i>
+                        <span>Bulan:</span>
+                        <input type="month" id="adminMonthFilter" onchange="renderAdminDashboard()" class="bg-transparent font-bold text-slate-700 outline-none">
+                    </div>
+                    <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-file-excel"></i> Ekspor CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Team Summary Statistics -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase">Total Anggota</span>
+                    <p class="text-xl font-black text-slate-800 mt-1">3 Orang</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-[11px] font-bold text-emerald-600 uppercase">Hadir Bulan Ini</span>
+                    <p id="adminStatHadir" class="text-xl font-black text-emerald-600 mt-1">0 Hari</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-[11px] font-bold text-rose-600 uppercase">Total Terlambat</span>
+                    <p id="adminStatLate" class="text-xl font-black text-rose-600 mt-1">0 Kali</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-[11px] font-bold text-amber-600 uppercase">Izin / Sakit / Cuti</span>
+                    <p id="adminStatOther" class="text-xl font-black text-amber-600 mt-1">0 Hari</p>
+                </div>
+            </div>
+
+            <!-- Full Matrix Attendance Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells text-indigo-600"></i> Matriks Rekapitulasi Tim
+                    </h3>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-800 text-white font-bold uppercase tracking-wider">
+                                <th class="py-3 px-4 w-44 sticky left-0 bg-slate-800 z-10 border-r border-slate-700">Tanggal</th>
+                                <th class="py-3 px-4 text-center border-r border-slate-700 w-36">RAKSA</th>
+                                <th class="py-3 px-4 text-center border-r border-slate-700 w-36">GALUH</th>
+                                <th class="py-3 px-4 text-center border-r border-slate-700 w-36">KARYO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMatrixBody" class="divide-y divide-slate-200">
+                            <!-- Matrix Rows generated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ================= MODAL: FORM ABSENSI (IN / OUT) ================= -->
+    <div id="absenModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
+            <!-- Modal Header -->
+            <div id="absenModalHeader" class="p-5 text-white flex justify-between items-center bg-indigo-600">
+                <div class="flex items-center gap-2.5">
+                    <i id="absenModalIcon" class="fa-solid fa-camera text-xl"></i>
+                    <h3 id="absenModalTitle" class="font-bold text-base">Form Absen Masuk</h3>
+                </div>
+                <button onclick="closeAbsenModal()" class="text-white/80 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form onsubmit="submitAbsenForm(event)" class="p-6 space-y-4">
+                <input type="hidden" id="modalType" value="IN">
+
+                <!-- Conditional In Status Selection -->
+                <div id="statusInGroup">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Pilih Status Kehadiran</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-center justify-center p-2.5 border rounded-xl cursor-pointer text-xs font-bold transition has-[:checked]:bg-emerald-500 has-[:checked]:text-white has-[:checked]:border-emerald-500 border-slate-200 text-slate-700">
+                            <input type="radio" name="modalStatus" value="Masuk" checked class="sr-only">
+                            <i class="fa-solid fa-check mr-1.5"></i> Masuk
+                        </label>
+                        <label class="flex items-center justify-center p-2.5 border rounded-xl cursor-pointer text-xs font-bold transition has-[:checked]:bg-amber-500 has-[:checked]:text-white has-[:checked]:border-amber-500 border-slate-200 text-slate-700">
+                            <input type="radio" name="modalStatus" value="Izin" class="sr-only">
+                            <i class="fa-solid fa-envelope mr-1.5"></i> Izin
+                        </label>
+                        <label class="flex items-center justify-center p-2.5 border rounded-xl cursor-pointer text-xs font-bold transition has-[:checked]:bg-blue-500 has-[:checked]:text-white has-[:checked]:border-blue-500 border-slate-200 text-slate-700">
+                            <input type="radio" name="modalStatus" value="Sakit" class="sr-only">
+                            <i class="fa-solid fa-notes-medical mr-1.5"></i> Sakit
+                        </label>
+                        <label class="flex items-center justify-center p-2.5 border rounded-xl cursor-pointer text-xs font-bold transition has-[:checked]:bg-purple-500 has-[:checked]:text-white has-[:checked]:border-purple-500 border-slate-200 text-slate-700">
+                            <input type="radio" name="modalStatus" value="Cuti" class="sr-only">
+                            <i class="fa-solid fa-umbrella-beach mr-1.5"></i> Cuti
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Camera / Photo Upload Box -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Ambil Foto Selfie / Bukti Absen <span class="text-rose-500">*</span></label>
+                    <div class="border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center hover:border-indigo-500 transition relative bg-slate-50">
+                        <input type="file" id="photoInput" accept="image/*" capture="user" onchange="previewPhoto(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required>
+                        <div id="photoPlaceholder" class="space-y-2">
+                            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto">
+                                <i class="fa-solid fa-camera text-lg"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-600">Klik / Tap untuk ambil foto atau upload</p>
+                            <p class="text-[10px] text-slate-400">Gunakan kamera HP/Webcam Anda</p>
+                        </div>
+                        <img id="photoPreviewImg" class="hidden max-h-48 rounded-xl mx-auto border border-slate-300 shadow-sm object-cover">
+                    </div>
+                </div>
+
+                <!-- Conditional Out Daily Work Report Textarea -->
+                <div id="workReportGroup" class="hidden">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Jelaskan Apa Saja Yang Sudah Dikerjakan Hari Ini <span class="text-rose-500">*</span></label>
+                    <textarea id="workReportText" rows="3" placeholder="Contoh: Membuat konten feed Instagram, menyusun jadwal posting, merevisi materi promo..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none transition"></textarea>
+                </div>
+
+                <!-- Action Button -->
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Absensi Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: DETAIL BUKTI / LAPORAN ADMIN ================= -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="p-4 bg-slate-800 text-white flex justify-between items-center">
+                <h3 class="font-bold text-sm flex items-center gap-2"><i class="fa-solid fa-file-invoice text-indigo-400"></i> Detail Absensi & Laporan</h3>
+                <button onclick="closeDetailModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+                <div class="border-b border-slate-100 pb-3">
+                    <div id="detailMemberName" class="font-extrabold text-slate-800 text-base">MEMBER NAME</div>
+                    <div id="detailDateText" class="text-xs text-slate-500 font-medium">Tanggal</div>
+                </div>
+
+                <!-- Status & Time Tags -->
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                        <span class="text-[10px] text-slate-400 block uppercase">Jam Masuk</span>
+                        <span id="detailInTime" class="text-slate-800">-- : --</span>
+                    </div>
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                        <span class="text-[10px] text-slate-400 block uppercase">Jam Pulang</span>
+                        <span id="detailOutTime" class="text-slate-800">-- : --</span>
+                    </div>
+                </div>
+
+                <!-- Photos Section -->
+                <div>
+                    <span class="text-xs font-bold text-slate-600 block mb-2">Foto Bukti Selfi</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Bukti Masuk:</span>
+                            <div id="detailInPhotoContainer" class="bg-slate-100 h-28 rounded-xl flex items-center justify-center border border-slate-200 overflow-hidden text-slate-400 text-xs">
+                                Tidak ada foto
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Bukti Pulang:</span>
+                            <div id="detailOutPhotoContainer" class="bg-slate-100 h-28 rounded-xl flex items-center justify-center border border-slate-200 overflow-hidden text-slate-400 text-xs">
+                                Tidak ada foto
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Report Text -->
+                <div>
+                    <span class="text-xs font-bold text-slate-600 block mb-1">Laporan Pekerjaan Harian:</span>
+                    <div id="detailReportText" class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 italic">
+                        Belum mengisi laporan pekerjaan.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">
+        &copy; 2026 Absen Tracker System. Modern Attendance & Work Log.
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // System Config & Initial Mock Data
+        const STORAGE_KEY = 'absen_tracker_v2_data';
+        const MEMBERS = ['RAKSA', 'GALUH', 'KARYO'];
+
+        let currentUser = null; // { name: 'RAKSA', role: 'USER' } or { name: 'ADMIN', role: 'ADMIN' }
+        let attendanceData = {}; 
+        let tempPhotoBase64 = null;
+
+        // Initialize App on Load
+        window.onload = function() {
+            // Set Default Month Filter
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            document.getElementById('adminMonthFilter').value = `${y}-${m}`;
+
+            loadData();
+            checkSession();
+        };
+
+        // Load or Initialize Data in LocalStorage
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try { attendanceData = JSON.parse(stored); } catch (e) { attendanceData = {}; }
+            } else {
+                // Pre-populate demo records for October 2026
+                attendanceData = {
+                    "2026-10-19": {
+                        "RAKSA": { statusIn: "Masuk", inTime: "07:55", inLate: false, outTime: "17:00", report: "Membuat konten carousel dan posting feed.", inPhoto: null, outPhoto: null },
+                        "GALUH": { statusIn: "Masuk", inTime: "08:15", inLate: true, outTime: "17:05", report: "Riset keyword hashtag dan buat copywriting.", inPhoto: null, outPhoto: null },
+                        "KARYO": { statusIn: "Izin", inTime: "-", inLate: false, outTime: "-", report: "-", inPhoto: null, outPhoto: null }
+                    }
+                };
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(attendanceData));
+        }
+
+        // Handle Login Submission
+        function handleLogin(e) {
+            e.preventDefault();
+            const selected = document.getElementById('loginUserSelect').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            if (selected === 'ADMIN') {
+                if (pass === 'admin123') {
+                    currentUser = { name: 'Administrator', role: 'ADMIN' };
+                } else {
+                    alert('Password Admin salah! (Gunakan: admin123)');
+                    return;
+                }
+            } else {
+                if (pass === '123456') {
+                    currentUser = { name: selected, role: 'USER' };
+                } else {
+                    alert('Password User salah! (Gunakan: 123456)');
+                    return;
+                }
+            }
+
+            sessionStorage.setItem('absen_session', JSON.stringify(currentUser));
+            document.getElementById('loginPassword').value = '';
+            checkSession();
+        }
+
+        function checkSession() {
+            const savedSession = sessionStorage.getItem('absen_session');
+            if (savedSession) {
+                currentUser = JSON.parse(savedSession);
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('navUserArea').classList.remove('hidden');
+                document.getElementById('navUserName').innerText = currentUser.name;
+                document.getElementById('navUserRole').innerText = currentUser.role;
+
+                if (currentUser.role === 'ADMIN') {
+                    document.getElementById('userDashboardSection').classList.add('hidden');
+                    document.getElementById('adminDashboardSection').classList.remove('hidden');
+                    renderAdminDashboard();
+                } else {
+                    document.getElementById('adminDashboardSection').classList.add('hidden');
+                    document.getElementById('userDashboardSection').classList.remove('hidden');
+                    renderUserDashboard();
+                }
+            } else {
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('navUserArea').classList.add('hidden');
+                document.getElementById('userDashboardSection').classList.add('hidden');
+                document.getElementById('adminDashboardSection').classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('absen_session');
+            currentUser = null;
+            checkSession();
+        }
+
+        // ================= USER DASHBOARD FUNCTIONS =================
+        function renderUserDashboard() {
+            document.getElementById('userDisplayName').innerText = currentUser.name;
+            const dateStr = getTodayDateStr();
+            const record = attendanceData[dateStr]?.[currentUser.name];
+
+            const badge = document.getElementById('userTodayBadge');
+            const inTimeEl = document.getElementById('userInTime');
+            const inFlagEl = document.getElementById('userInFlag');
+            const outTimeEl = document.getElementById('userOutTime');
+            const outFlagEl = document.getElementById('userOutFlag');
+
+            if (!record) {
+                badge.innerText = "Belum Absen Hari Ini";
+                badge.className = "text-xs bg-slate-100 font-bold px-2.5 py-1 rounded-full text-slate-600";
+                inTimeEl.innerText = "-- : --";
+                inFlagEl.innerText = "Belum Melakukan Absen";
+                inFlagEl.className = "text-xs font-semibold text-slate-500";
+                outTimeEl.innerText = "-- : --";
+                outFlagEl.innerText = "Belum Melakukan Absen";
+            } else {
+                // In Status
+                inTimeEl.innerText = record.inTime || "-- : --";
+                if (record.statusIn === 'Masuk') {
+                    if (record.inLate) {
+                        inFlagEl.innerText = "Terlambat (Lewat 08:00)";
+                        inFlagEl.className = "text-xs font-bold text-rose-600";
+                    } else {
+                        inFlagEl.innerText = "Tepat Waktu";
+                        inFlagEl.className = "text-xs font-bold text-emerald-600";
+                    }
+                } else {
+                    inFlagEl.innerText = `Status: ${record.statusIn}`;
+                    inFlagEl.className = "text-xs font-bold text-amber-600";
+                }
+
+                // Out Status
+                outTimeEl.innerText = record.outTime || "-- : --";
+                if (record.outTime && record.outTime !== '-') {
+                    outFlagEl.innerText = "Sudah Absen Pulang";
+                    outFlagEl.className = "text-xs font-bold text-emerald-600";
+                    badge.innerText = "Selesai Absen Hari Ini";
+                    badge.className = "text-xs bg-emerald-100 font-bold px-2.5 py-1 rounded-full text-emerald-700";
+                } else {
+                    outFlagEl.innerText = "Belum Absen Pulang";
+                    badge.innerText = "Sudah Absen Masuk";
+                    badge.className = "text-xs bg-indigo-100 font-bold px-2.5 py-1 rounded-full text-indigo-700";
+                }
+            }
+
+            renderUserHistoryTable();
+        }
+
+        function renderUserHistoryTable() {
+            const tbody = document.getElementById('userHistoryTableBody');
+            let html = '';
+
+            // Sort dates descending
+            const dates = Object.keys(attendanceData).sort().reverse();
+
+            dates.forEach(date => {
+                const rec = attendanceData[date]?.[currentUser.name];
+                if (rec) {
+                    html += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="py-3 px-4 font-bold text-slate-800">${formatDateIndo(date)}</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${getStatusBadgeClass(rec.statusIn, rec.inLate)}">
+                                    ${rec.statusIn} ${rec.inLate ? '(Terlambat)' : ''}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 font-semibold">${rec.inTime || '-'}</td>
+                            <td class="py-3 px-4 font-semibold">${rec.outTime || '-'}</td>
+                            <td class="py-3 px-4 max-w-xs truncate font-medium text-slate-600" title="${rec.report || ''}">${rec.report || '-'}</td>
+                            <td class="py-3 px-4 text-center">
+                                <button onclick="viewDetailModal('${date}', '${currentUser.name}')" class="text-indigo-600 hover:text-indigo-800 font-bold text-xs">
+                                    <i class="fa-solid fa-eye"></i> Detail
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            if (html === '') {
+                html = `<tr><td colspan="6" class="py-6 text-center text-slate-400 italic">Belum ada riwayat absensi.</td></tr>`;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        // ================= ADMIN DASHBOARD FUNCTIONS =================
+        function renderAdminDashboard() {
+            const monthVal = document.getElementById('adminMonthFilter').value; // e.g. "2026-10"
+            if (!monthVal) return;
+
+            const [yStr, mStr] = monthVal.split('-');
+            const year = parseInt(yStr, 10);
+            const month = parseInt(mStr, 10);
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            let matrixHtml = '';
+            let totalHadir = 0;
+            let totalLate = 0;
+            let totalOther = 0;
+
+            const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dStr = String(d).padStart(2, '0');
+                const dateKey = `${yStr}-${mStr}-${dStr}`;
+                const dateObj = new Date(year, month - 1, d);
+                const dayIndex = dateObj.getDay();
+                const isWeekend = (dayIndex === 0 || dayIndex === 6);
+
+                const rowBg = isWeekend ? 'bg-rose-50 text-slate-700' : 'bg-white hover:bg-indigo-50/40 text-slate-800';
+
+                matrixHtml += `<tr class="${rowBg}">`;
+                matrixHtml += `
+                    <td class="py-3 px-4 font-bold text-xs sticky left-0 z-10 border-r border-slate-200 ${isWeekend ? 'bg-rose-100 text-rose-800' : 'bg-white'}">
+                        ${dayNames[dayIndex]}, ${dStr}/${mStr}/${yStr}
+                    </td>
+                `;
+
+                MEMBERS.forEach(m => {
+                    const rec = attendanceData[dateKey]?.[m];
+                    if (rec) {
+                        if (rec.statusIn === 'Masuk') totalHadir++;
+                        if (rec.inLate) totalLate++;
+                        if (['Izin', 'Sakit', 'Cuti'].includes(rec.statusIn)) totalOther++;
+                    }
+
+                    matrixHtml += `
+                        <td class="py-2 px-3 text-center border-r border-slate-200">
+                            ${renderAdminCell(dateKey, m, rec, isWeekend)}
+                        </td>
+                    `;
+                });
+
+                matrixHtml += `</tr>`;
+            }
+
+            document.getElementById('adminMatrixBody').innerHTML = matrixHtml;
+            document.getElementById('adminStatHadir').innerText = `${totalHadir} Hari`;
+            document.getElementById('adminStatLate').innerText = `${totalLate} Kali`;
+            document.getElementById('adminStatOther').innerText = `${totalOther} Hari`;
+        }
+
+        function renderAdminCell(dateKey, member, rec, isWeekend) {
+            if (!rec) {
+                if (isWeekend) return `<span class="text-[10px] text-rose-400 font-bold">Akhir Pekan</span>`;
+                return `<span class="text-[10px] text-slate-300">-</span>`;
+            }
+
+            let badgeColor = "bg-slate-100 text-slate-600";
+            if (rec.statusIn === 'Masuk') {
+                badgeColor = rec.inLate ? "bg-rose-100 text-rose-800" : "bg-emerald-100 text-emerald-800";
+            } else if (rec.statusIn === 'Izin') badgeColor = "bg-amber-100 text-amber-800";
+            else if (rec.statusIn === 'Sakit') badgeColor = "bg-blue-100 text-blue-800";
+            else if (rec.statusIn === 'Cuti') badgeColor = "bg-purple-100 text-purple-800";
+
+            return `
+                <div class="space-y-1">
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold ${badgeColor}">
+                        ${rec.statusIn} ${rec.inLate ? '⏱️' : ''}
+                    </span>
+                    <div class="text-[10px] text-slate-500 font-semibold">
+                        ${rec.inTime || '--'} - ${rec.outTime || '--'}
+                    </div>
+                    <button onclick="viewDetailModal('${dateKey}', '${member}')" class="text-[10px] text-indigo-600 hover:underline font-bold">
+                        <i class="fa-solid fa-file-lines"></i> Bukti & Laporan
+                    </button>
+                </div>
+            `;
+        }
+
+        // ================= MODAL & FORM HANDLERS =================
+        function openAbsenModal(type) {
+            tempPhotoBase64 = null;
+            document.getElementById('photoPreviewImg').classList.add('hidden');
+            document.getElementById('photoPlaceholder').classList.remove('hidden');
+            document.getElementById('photoInput').value = '';
+
+            document.getElementById('modalType').value = type;
+            const header = document.getElementById('absenModalHeader');
+            const title = document.getElementById('absenModalTitle');
+            const icon = document.getElementById('absenModalIcon');
+
+            if (type === 'IN') {
+                header.className = "p-5 text-white flex justify-between items-center bg-emerald-600";
+                title.innerText = "Form Absen Masuk";
+                icon.className = "fa-solid fa-right-to-bracket text-xl";
+                document.getElementById('statusInGroup').classList.remove('hidden');
+                document.getElementById('workReportGroup').classList.add('hidden');
+                document.getElementById('workReportText').removeAttribute('required');
+            } else {
+                header.className = "p-5 text-white flex justify-between items-center bg-amber-600";
+                title.innerText = "Form Absen Pulang";
+                icon.className = "fa-solid fa-right-from-bracket text-xl";
+                document.getElementById('statusInGroup').classList.add('hidden');
+                document.getElementById('workReportGroup').classList.remove('hidden');
+                document.getElementById('workReportText').setAttribute('required', 'true');
+            }
+
+            document.getElementById('absenModal').classList.remove('hidden');
+        }
+
+        function closeAbsenModal() {
+            document.getElementById('absenModal').classList.add('hidden');
+        }
+
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempPhotoBase64 = e.target.result;
+                    const img = document.getElementById('photoPreviewImg');
+                    img.src = tempPhotoBase64;
+                    img.classList.remove('hidden');
+                    document.getElementById('photoPlaceholder').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function submitAbsenForm(e) {
+            e.preventDefault();
+            if (!tempPhotoBase64) {
+                alert('Wajib mengunggah/mengambil foto bukti!');
+                return;
+            }
+
+            const type = document.getElementById('modalType').value;
+            const dateStr = getTodayDateStr();
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            if (!attendanceData[dateStr]) attendanceData[dateStr] = {};
+            if (!attendanceData[dateStr][currentUser.name]) {
+                attendanceData[dateStr][currentUser.name] = {
+                    statusIn: 'Masuk',
+                    inTime: '-',
+                    inLate: false,
+                    outTime: '-',
+                    report: '-',
+                    inPhoto: null,
+                    outPhoto: null
+                };
+            }
+
+            const record = attendanceData[dateStr][currentUser.name];
+
+            if (type === 'IN') {
+                const selectedStatus = document.querySelector('input[name="modalStatus"]:checked').value;
+                record.statusIn = selectedStatus;
+                record.inTime = timeStr;
+                record.inPhoto = tempPhotoBase64;
+
+                // Late check: after 08:00 AM
+                if (selectedStatus === 'Masuk') {
+                    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+                    record.inLate = currentMinutes > (8 * 60); // > 08:00
+                } else {
+                    record.inLate = false;
+                }
+            } else {
+                record.outTime = timeStr;
+                record.outPhoto = tempPhotoBase64;
+                record.report = document.getElementById('workReportText').value;
+            }
+
+            saveData();
+            closeAbsenModal();
+            renderUserDashboard();
+            alert(`Absen ${type === 'IN' ? 'Masuk' : 'Pulang'} berhasil disimpan!`);
+        }
+
+        function viewDetailModal(dateKey, member) {
+            const rec = attendanceData[dateKey]?.[member];
+            if (!rec) return;
+
+            document.getElementById('detailMemberName').innerText = member;
+            document.getElementById('detailDateText').innerText = formatDateIndo(dateKey);
+            document.getElementById('detailInTime').innerText = rec.inTime || '-- : --';
+            document.getElementById('detailOutTime').innerText = rec.outTime || '-- : --';
+
+            // Photos
+            const inContainer = document.getElementById('detailInPhotoContainer');
+            if (rec.inPhoto) {
+                inContainer.innerHTML = `<img src="${rec.inPhoto}" class="w-full h-full object-cover">`;
+            } else {
+                inContainer.innerText = 'Tidak ada foto';
+            }
+
+            const outContainer = document.getElementById('detailOutPhotoContainer');
+            if (rec.outPhoto) {
+                outContainer.innerHTML = `<img src="${rec.outPhoto}" class="w-full h-full object-cover">`;
+            } else {
+                outContainer.innerText = 'Tidak ada foto';
+            }
+
+            document.getElementById('detailReportText').innerText = rec.report || 'Belum mengisi laporan pekerjaan.';
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        // Export Data to CSV (For Admin)
+        function exportToCSV() {
+            let csv = 'Tanggal,Nama,Status Masuk,Terlambat,Jam Masuk,Jam Pulang,Laporan Pekerjaan\n';
+
+            Object.keys(attendanceData).sort().forEach(date => {
+                MEMBERS.forEach(member => {
+                    const rec = attendanceData[date]?.[member];
+                    if (rec) {
+                        const cleanReport = (rec.report || '').replace(/"/g, '""');
+                        csv += `"${date}","${member}","${rec.statusIn}","${rec.inLate ? 'Ya' : 'Tidak'}","${rec.inTime}","${rec.outTime}","${cleanReport}"\n`;
+                    }
+                });
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `Rekap_Absensi_${getTodayDateStr()}.csv`);
+            a.click();
+        }
+
+        // Helper Utilities
+        function getTodayDateStr() {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatDateIndo(dateStr) {
+            const [y, m, d] = dateStr.split('-');
+            return `${d}/${m}/${y}`;
+        }
+
+        function getStatusBadgeClass(status, isLate) {
+            if (status === 'Masuk') {
+                return isLate ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800';
+            }
+            if (status === 'Izin') return 'bg-amber-100 text-amber-800';
+            if (status === 'Sakit') return 'bg-blue-100 text-blue-800';
+            if (status === 'Cuti') return 'bg-purple-100 text-purple-800';
+            return 'bg-slate-100 text-slate-800';
+        }
+    </script>
+</body>
+</html>
