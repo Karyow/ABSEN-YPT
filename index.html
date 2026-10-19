@@ -135,7 +135,7 @@
     <!-- DASHBOARD SECTION -->
     <div id="dashboardSection" class="hidden space-y-6">
 
-      <!-- JAM KERJA & WAKTU REALTIME BAR (Jam Warna Netral Elegan) -->
+      <!-- JAM KERJA & WAKTU REALTIME BAR -->
       <section class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Aturan Jam Kerja Kantor</span>
@@ -257,39 +257,13 @@
 
       </section>
 
-      <!-- REKAPITULASI ARSIP BULANAN PRIBADI KARYAWAN -->
-      <section id="karyawanArsipSection" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 class="font-space font-bold text-slate-900 text-base mb-1 flex items-center space-x-2">
-          <i data-lucide="calendar" class="w-4 h-4 text-red-600"></i>
-          <span>Arsip & Rekapitulasi Kehadiran Bulan Ini</span>
-        </h3>
-        <p class="text-xs text-slate-500 mb-4">Catatan arsip jam masuk dan jam pulang harian Anda.</p>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs text-left">
-            <thead>
-              <tr class="bg-slate-100 text-slate-700 font-space border-b border-slate-200">
-                <th class="p-2.5">Tanggal</th>
-                <th class="p-2.5">Jam Masuk</th>
-                <th class="p-2.5">Status Masuk</th>
-                <th class="p-2.5">Jam Pulang</th>
-                <th class="p-2.5">Laporan Tugas</th>
-              </tr>
-            </thead>
-            <tbody id="userArsipTableBody" class="divide-y divide-slate-100">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- HRD ADMINISTRATOR PANEL -->
+      <!-- HRD ADMINISTRATOR PANEL (Menampilkan Data Seluruh Karyawan) -->
       <section id="hrdPanel" class="hidden space-y-6">
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-4">
             <div>
               <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest">HR Management Console</span>
-              <h3 class="font-space font-bold text-slate-900 text-lg mt-0.5">Kontrol Izin & Audit Presensi Tim</h3>
+              <h3 class="font-space font-bold text-slate-900 text-lg mt-0.5">Audit Data Presensi Seluruh Tim</h3>
             </div>
 
             <!-- Grant Reset Password Permission Form -->
@@ -475,7 +449,6 @@
         document.getElementById('hrdPanel').classList.add('hidden');
         document.getElementById('welcomeText').innerText = `Halo, ${currentUserState.name}!`;
         checkTodayStatus();
-        loadUserArsip();
       }
     }
 
@@ -598,7 +571,6 @@
       saveGlobalLog(newLog);
       alert('Absen Masuk Berhasil Disimpan! Status: ' + finalStatus);
       checkTodayStatus();
-      loadUserArsip();
     }
 
     function handleAbsenPulang(e) {
@@ -634,7 +606,6 @@
       saveGlobalLog(newLog);
       alert('Absen Pulang & Laporan Kerja Berhasil Disimpan!');
       checkTodayStatus();
-      loadUserArsip();
     }
 
     function saveGlobalLog(log) {
@@ -643,54 +614,7 @@
       localStorage.setItem('ypt_global_logs', JSON.stringify(allLogs));
     }
 
-    // LOAD ARSIP BULANAN PRIBADI KARYAWAN
-    function loadUserArsip() {
-      const tbody = document.getElementById('userArsipTableBody');
-      const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
-      tbody.innerHTML = '';
-
-      const userLogs = allLogs.filter(l => l.userName === currentUserState.name);
-      
-      // Group by dateKey
-      const groupedByDate = {};
-      userLogs.forEach(l => {
-        if (!groupedByDate[l.dateKey]) groupedByDate[l.dateKey] = { masuk: '-', pulang: '-', status: '-', laporan: '-' };
-        if (l.type === 'MASUK') {
-          groupedByDate[l.dateKey].masuk = l.time;
-          groupedByDate[l.dateKey].status = l.status;
-        }
-        if (l.type === 'PULANG') {
-          groupedByDate[l.dateKey].pulang = l.time;
-          groupedByDate[l.dateKey].laporan = l.laporan;
-        }
-      });
-
-      const dates = Object.keys(groupedByDate).sort().reverse();
-
-      if (dates.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada arsip riwayat bulan ini.</td></tr>`;
-        return;
-      }
-
-      dates.forEach(date => {
-        const item = groupedByDate[date];
-        let badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${item.status}</span>`;
-        if (item.status === 'Terlambat') badge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Terlambat</span>`;
-        if (item.status === 'Tepat Waktu') badge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Tepat Waktu</span>`;
-
-        tbody.innerHTML += `
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-2.5 font-semibold text-slate-900">${date}</td>
-            <td class="p-2.5 text-slate-600">${item.masuk}</td>
-            <td class="p-2.5">${badge}</td>
-            <td class="p-2.5 text-slate-600">${item.pulang}</td>
-            <td class="p-2.5 text-slate-600 max-w-xs truncate">${item.laporan}</td>
-          </tr>
-        `;
-      });
-    }
-
-    // LOAD LOGS UNTUK HRD AUDIT (SEMUA KARYAWAN)
+    // LOAD LOGS UNTUK HRD AUDIT (MENAMPILKAN SEMUA DATA KARYAWAN)
     function loadHrdLogs() {
       const tbody = document.getElementById('hrdLogTableBody');
       const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
