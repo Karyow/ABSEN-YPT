@@ -16,24 +16,13 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- 🌟 WAJIB ADA DI SINI AGAR FIREBER DIKENAL OLEH BROWSER 🌟 -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-    .font-space {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
+    body { font-family: 'Poppins', sans-serif; }
+    .font-space { font-family: 'Space Grotesk', sans-serif; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen antialiased flex flex-col justify-between">
@@ -68,11 +57,9 @@
 
     <!-- LOGIN & REGISTRATION SECTION -->
     <section id="loginSection" class="max-w-md mx-auto my-4 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl -z-0"></div>
-      
       <div class="relative z-10">
         <div class="text-center mb-6">
-          <span class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 text-[10px] font-bold rounded-full uppercase tracking-widest">Portal Presensi Resmi</span>
+          <span class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 text-[10px] font-bold rounded-full uppercase tracking-widest">Cloud Sync Active</span>
           <h2 class="font-space text-2xl font-bold text-slate-900 mt-2">Masuk Aplikasi</h2>
           <p class="text-xs text-slate-500 mt-1">Silakan pilih nama dan masukkan PIN 4 angka Anda</p>
         </div>
@@ -109,12 +96,6 @@
             <span id="btnSubmitKaryawanText">Masuk Presensi</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
-
-          <div class="pt-3 text-center border-t border-slate-100">
-            <button type="button" onclick="alert('Untuk mengganti PIN, silakan hubungi HRD/Admin secara langsung untuk mendapatkan konfirmasi izin reset.')" class="text-[11px] text-red-600 font-semibold hover:underline">
-              Lupa / Ingin Ganti PIN? Hubungi HRD
-            </button>
-          </div>
         </form>
 
         <!-- FORM LOGIN HRD -->
@@ -141,7 +122,7 @@
           <span class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Aturan Jam Kerja Kantor</span>
           <h2 id="welcomeText" class="font-space text-xl font-bold text-slate-900 mt-0.5">Portal Presensi Harian</h2>
           <div class="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-600">
-            <span class="flex items-center space-x-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-red-600"></i><span>Masuk: <strong>08:00 WIB</strong> (Terlambat setelahnya)</span></span>
+            <span class="flex items-center space-x-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-red-600"></i><span>Masuk: <strong>08:00 WIB</strong></span></span>
             <span>•</span>
             <span class="flex items-center space-x-1"><i data-lucide="log-out" class="w-3.5 h-3.5 text-slate-700"></i><span>Pulang: <strong>16:30</strong> (Sen-Kam) / <strong>17:00</strong> (Jum)</span></span>
           </div>
@@ -153,11 +134,10 @@
         </div>
       </section>
 
-      <!-- KARYAWAN ABSEN WORKFLOW -->
+      <!-- KARYAWAN PANEL -->
       <section id="karyawanPanel" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- CARD 1: ABSEN MASUK -->
-        <div id="cardAbsenMasuk" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <!-- ABSEN MASUK -->
+        <div id="cardAbsenMasuk" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
               <div class="flex items-center space-x-2 text-red-600">
@@ -178,7 +158,6 @@
                 </select>
               </div>
 
-              <!-- Live Camera Module Masuk -->
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Foto Bukti Selfie (Kamera Langsung)</label>
                 <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-200">
@@ -186,15 +165,15 @@
                   <img id="imgPreviewMasuk" class="w-full h-full object-cover hidden" />
                   <div id="cameraMasukPlaceholder" class="text-center p-4 text-white">
                     <i data-lucide="camera" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
-                    <p class="text-[11px] text-slate-300">Klik tombol Buka Kamera di bawah</p>
+                    <p class="text-[11px] text-slate-300">Klik Buka Kamera</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 mt-2">
-                  <button type="button" onclick="startCamera('videoMasuk', 'cameraMasukPlaceholder')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition font-space flex items-center justify-center space-x-1">
+                  <button type="button" onclick="startCamera('videoMasuk', 'cameraMasukPlaceholder')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
                     <i data-lucide="aperture" class="w-3.5 h-3.5 text-red-600"></i>
                     <span>Buka Kamera</span>
                   </button>
-                  <button type="button" onclick="capturePhoto('videoMasuk', 'imgPreviewMasuk')" class="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition font-space flex items-center justify-center space-x-1">
+                  <button type="button" onclick="capturePhoto('videoMasuk', 'imgPreviewMasuk')" class="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
                     <i data-lucide="camera" class="w-3.5 h-3.5"></i>
                     <span>Jepret Foto</span>
                   </button>
@@ -202,14 +181,14 @@
               </div>
 
               <button type="submit" id="btnSubmitMasuk" class="w-full bg-red-600 hover:bg-red-700 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md shadow-red-600/20">
-                Simpan Absen Masuk
+                Simpan Absen Masuk (Cloud)
               </button>
             </form>
           </div>
         </div>
 
-        <!-- CARD 2: ABSEN PULANG -->
-        <div id="cardAbsenPulang" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <!-- ABSEN PULANG -->
+        <div id="cardAbsenPulang" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
               <div class="flex items-center space-x-2 text-slate-800">
@@ -220,7 +199,6 @@
             </div>
 
             <form id="formPulang" onsubmit="handleAbsenPulang(event)" class="space-y-4">
-              <!-- Live Camera Module Pulang -->
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Foto Bukti Pulang (Kamera Langsung)</label>
                 <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-200">
@@ -228,15 +206,15 @@
                   <img id="imgPreviewPulang" class="w-full h-full object-cover hidden" />
                   <div id="cameraPulangPlaceholder" class="text-center p-4 text-white">
                     <i data-lucide="camera" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
-                    <p class="text-[11px] text-slate-300">Klik tombol Buka Kamera di bawah</p>
+                    <p class="text-[11px] text-slate-300">Klik Buka Kamera</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 mt-2">
-                  <button type="button" onclick="startCamera('videoPulang', 'cameraPulangPlaceholder')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition font-space flex items-center justify-center space-x-1">
+                  <button type="button" onclick="startCamera('videoPulang', 'cameraPulangPlaceholder')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
                     <i data-lucide="aperture" class="w-3.5 h-3.5 text-red-600"></i>
                     <span>Buka Kamera</span>
                   </button>
-                  <button type="button" onclick="capturePhoto('videoPulang', 'imgPreviewPulang')" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition font-space flex items-center justify-center space-x-1">
+                  <button type="button" onclick="capturePhoto('videoPulang', 'imgPreviewPulang')" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
                     <i data-lucide="camera" class="w-3.5 h-3.5"></i>
                     <span>Jepret Foto</span>
                   </button>
@@ -254,33 +232,18 @@
             </form>
           </div>
         </div>
-
       </section>
 
-      <!-- HRD ADMINISTRATOR PANEL (Menampilkan Data Seluruh Karyawan) -->
+      <!-- HRD ADMINISTRATOR PANEL -->
       <section id="hrdPanel" class="hidden space-y-6">
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-4">
             <div>
-              <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest">HR Management Console</span>
+              <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest">HR Management Console (Real-Time Cloud)</span>
               <h3 class="font-space font-bold text-slate-900 text-lg mt-0.5">Audit Data Presensi Seluruh Tim</h3>
             </div>
-
-            <!-- Grant Reset Password Permission Form -->
-            <form onsubmit="handleGrantResetPermission(event)" class="flex items-center gap-2 w-full sm:w-auto">
-              <select id="selectGrantUser" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-900 focus:outline-none" required>
-                <option value="">-- Pilih Karyawan --</option>
-                <option value="Galuh">Galuh</option>
-                <option value="Karyo">Karyo</option>
-                <option value="Raksa">Raksa</option>
-              </select>
-              <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-space font-bold text-xs px-3 py-1.5 rounded-xl transition whitespace-nowrap shadow-sm">
-                Izinkan Reset PIN
-              </button>
-            </form>
           </div>
 
-          <!-- HR Log Table -->
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left">
               <thead>
@@ -294,7 +257,7 @@
                 </tr>
               </thead>
               <tbody id="hrdLogTableBody" class="divide-y divide-slate-100">
-                <!-- HR Data loaded via JS -->
+                <!-- Real-time data from Firebase -->
               </tbody>
             </table>
           </div>
@@ -318,14 +281,24 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="bg-white border-t border-slate-200 py-4 text-center text-[11px] text-slate-500 font-space">
-    © 2026 Yayasan Pendidikan Telkom (YPT) — Portal Presensi Karyawan
-  </footer>
-
-  <!-- SCRIPT ENGINE -->
+  <!-- SCRIPT ENGINE & FIREBASE REALTIME SYNC -->
   <script>
-    let currentUserState = null; 
+    // ⚠️ MASUKKAN KONFIGURASI FIREBASE ANDA DI SINI ⚠️
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-YW_cash_fZYvqsQKjTKR9Rfuto7Mmmo",
+      authDomain: "ypt-absen-tracker.firebaseapp.com",
+      projectId: "ypt-absen-tracker",
+      storageBucket: "ypt-absen-tracker.firebasestorage.app",
+      messagingSenderId: "805494203970",
+      appId: "1:805494203970:web:515f3412194777d99a6fdb",
+      measurementId: "G-911XWQY969"
+    };
+
+    // Inisialisasi Firebase & Firestore di dalam tag script yang benar
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let currentUserState = null;
     let activeCameraStream = null;
     let todayLogCache = { masuk: null, pulang: null };
     const HRD_PASSWORD_SECRET = '12345asdfg';
@@ -365,65 +338,40 @@
       }
     }
 
-    function checkUserRegisteredStatus() {
-      const name = document.getElementById('selectNamaKaryawan').value;
-      if (!name) return;
-
-      const userPin = localStorage.getItem('ypt_pin_' + name);
-      const isGrantReset = localStorage.getItem('ypt_grant_reset_' + name) === 'true';
-
-      if (!userPin || isGrantReset) {
-        document.getElementById('labelPasswordKaryawan').innerText = "Buat PIN 4 Angka Baru";
-        document.getElementById('inputPassKaryawan').placeholder = "••••";
-        document.getElementById('subtextRegStatus').innerText = "* Pendaftaran awal: Buat PIN tepat 4 angka.";
-        document.getElementById('btnSubmitKaryawanText').innerText = "Buat Akun & Masuk";
-      } else {
-        document.getElementById('labelPasswordKaryawan').innerText = "Masukkan PIN 4 Angka";
-        document.getElementById('inputPassKaryawan').placeholder = "••••";
-        document.getElementById('subtextRegStatus').innerText = "* Masukkan PIN 4 angka Anda.";
-        document.getElementById('btnSubmitKaryawanText').innerText = "Masuk Presensi";
-      }
-    }
-
-    function loginKaryawan(e) {
+    async function loginKaryawan(e) {
       e.preventDefault();
       const name = document.getElementById('selectNamaKaryawan').value;
       const inputPin = document.getElementById('inputPassKaryawan').value;
 
-      if (!name) {
-        alert('Pilih nama karyawan terlebih dahulu!');
+      if (!name || inputPin.length !== 4) {
+        alert('Pilih nama dan isi PIN 4 angka!');
         return;
       }
 
-      if (inputPin.length !== 4 || isNaN(inputPin)) {
-        alert('PIN harus tepat 4 angka!');
-        return;
-      }
+      try {
+        const userDoc = await db.collection('users').doc(name).get();
 
-      const existingPin = localStorage.getItem('ypt_pin_' + name);
-      const isGrantReset = localStorage.getItem('ypt_grant_reset_' + name) === 'true';
-
-      if (!existingPin || isGrantReset) {
-        localStorage.setItem('ypt_pin_' + name, inputPin);
-        localStorage.removeItem('ypt_grant_reset_' + name);
-        alert(`PIN untuk ${name} berhasil dibuat!`);
-        currentUserState = { name: name, role: 'karyawan' };
-        onLoginSuccess();
-      } else {
-        if (existingPin === inputPin) {
+        if (!userDoc.exists) {
+          await db.collection('users').doc(name).set({ pin: inputPin });
+          alert(`PIN 4 angka untuk ${name} berhasil didaftarkan di Cloud Database!`);
           currentUserState = { name: name, role: 'karyawan' };
           onLoginSuccess();
         } else {
-          alert('PIN salah! Hubungi HRD untuk reset PIN.');
+          if (userDoc.data().pin === inputPin) {
+            currentUserState = { name: name, role: 'karyawan' };
+            onLoginSuccess();
+          } else {
+            alert('PIN salah!');
+          }
         }
+      } catch (err) {
+        alert('Gagal terhubung ke Cloud Database: ' + err.message);
       }
     }
 
     function loginHrd(e) {
       e.preventDefault();
-      const pass = document.getElementById('inputPassHrd').value;
-
-      if (pass === HRD_PASSWORD_SECRET) {
+      if (document.getElementById('inputPassHrd').value === HRD_PASSWORD_SECRET) {
         currentUserState = { name: 'HRD ADMINISTRATOR', role: 'hrd' };
         onLoginSuccess();
       } else {
@@ -443,7 +391,7 @@
       if (currentUserState.role === 'hrd') {
         document.getElementById('karyawanPanel').classList.add('hidden');
         document.getElementById('hrdPanel').classList.remove('hidden');
-        loadHrdLogs();
+        subscribeRealtimeHrdLogs();
       } else {
         document.getElementById('karyawanPanel').classList.remove('hidden');
         document.getElementById('hrdPanel').classList.add('hidden');
@@ -458,8 +406,6 @@
       document.getElementById('loginSection').classList.remove('hidden');
       document.getElementById('dashboardSection').classList.add('hidden');
       document.getElementById('userInfoHeader').classList.add('hidden');
-      document.getElementById('inputPassKaryawan').value = '';
-      document.getElementById('inputPassHrd').value = '';
     }
 
     async function startCamera(videoId, placeholderId) {
@@ -478,19 +424,13 @@
 
     function capturePhoto(videoId, imgPreviewId) {
       const video = document.getElementById(videoId);
-      if (!video || video.classList.contains('hidden')) {
-        alert('Buka kamera terlebih dahulu!');
-        return;
-      }
+      if (!video || video.classList.contains('hidden')) return alert('Buka kamera terlebih dahulu!');
       const canvas = document.createElement('canvas');
       canvas.width = 640;
       canvas.height = (video.videoHeight / video.videoWidth) * 640 || 480;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
       const img = document.getElementById(imgPreviewId);
-      img.src = dataUrl;
+      img.src = canvas.toDataURL('image/jpeg', 0.6);
       img.classList.remove('hidden');
       video.classList.add('hidden');
       stopCamera();
@@ -503,60 +443,36 @@
       }
     }
 
-    function checkTodayStatus() {
+    async function checkTodayStatus() {
       const dateKey = new Date().toISOString().split('T')[0];
-      const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
+      const snapshot = await db.collection('absen_logs')
+        .where('userName', '==', currentUserState.name)
+        .where('dateKey', '==', dateKey)
+        .get();
 
-      const userTodayLogs = allLogs.filter(l => l.userName === currentUserState.name && l.dateKey === dateKey);
-
-      const masukLog = userTodayLogs.find(l => l.type === 'MASUK');
-      const pulangLog = userTodayLogs.find(l => l.type === 'PULANG');
-
-      todayLogCache.masuk = masukLog || null;
-      todayLogCache.pulang = pulangLog || null;
-
-      if (masukLog) disableFormMasuk(masukLog.status);
-      if (pulangLog) disableFormPulang();
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.type === 'MASUK') {
+          todayLogCache.masuk = data;
+          document.getElementById('btnSubmitMasuk').disabled = true;
+          document.getElementById('btnSubmitMasuk').innerText = "Sudah Absen Masuk";
+        }
+        if (data.type === 'PULANG') {
+          todayLogCache.pulang = data;
+          document.getElementById('btnSubmitPulang').disabled = true;
+          document.getElementById('btnSubmitPulang').innerText = "Sudah Absen Pulang";
+        }
+      });
     }
 
-    function disableFormMasuk(status) {
-      document.getElementById('btnSubmitMasuk').disabled = true;
-      document.getElementById('btnSubmitMasuk').className = "w-full bg-slate-200 text-slate-500 font-space py-2.5 rounded-xl text-xs cursor-not-allowed font-bold";
-      document.getElementById('badgeStatusMasuk').innerText = 'Sudah Absen (' + status + ')';
-      document.getElementById('badgeStatusMasuk').className = "text-[10px] font-mono px-2.5 py-1 bg-red-100 text-red-700 rounded-full font-bold";
-    }
-
-    function disableFormPulang() {
-      document.getElementById('btnSubmitPulang').disabled = true;
-      document.getElementById('btnSubmitPulang').className = "w-full bg-slate-200 text-slate-500 font-space py-2.5 rounded-xl text-xs cursor-not-allowed font-bold";
-      document.getElementById('badgeStatusPulang').innerText = 'Sudah Absen Pulang';
-      document.getElementById('badgeStatusPulang').className = "text-[10px] font-mono px-2.5 py-1 bg-slate-900 text-white rounded-full font-bold";
-    }
-
-    function handleAbsenMasuk(e) {
+    async function handleAbsenMasuk(e) {
       e.preventDefault();
-      if (todayLogCache.masuk) {
-        alert('Anda sudah melakukan absen masuk hari ini!');
-        return;
-      }
-
       const img = document.getElementById('imgPreviewMasuk');
-      if (img.classList.contains('hidden') || !img.src) {
-        alert('Wajib mengambil foto selfie terlebih dahulu!');
-        return;
-      }
+      if (img.classList.contains('hidden')) return alert('Wajib ambil foto!');
 
       const now = new Date();
       const statusType = document.getElementById('selectStatusMasuk').value;
-      let finalStatus = statusType;
-
-      if (statusType === 'Masuk') {
-        if (now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 0)) {
-          finalStatus = 'Terlambat';
-        } else {
-          finalStatus = 'Tepat Waktu';
-        }
-      }
+      let finalStatus = (statusType === 'Masuk' && (now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 0))) ? 'Terlambat' : 'Tepat Waktu';
 
       const newLog = {
         dateKey: now.toISOString().split('T')[0],
@@ -565,32 +481,20 @@
         type: 'MASUK',
         status: finalStatus,
         photo: img.src,
-        laporan: '-'
+        laporan: '-',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      saveGlobalLog(newLog);
-      alert('Absen Masuk Berhasil Disimpan! Status: ' + finalStatus);
+      await db.collection('absen_logs').add(newLog);
+      alert('Absen Masuk Berhasil Disimpan ke Cloud!');
       checkTodayStatus();
     }
 
-    function handleAbsenPulang(e) {
+    async function handleAbsenPulang(e) {
       e.preventDefault();
-      if (!todayLogCache.masuk) {
-        alert('Anda belum melakukan absen masuk hari ini!');
-        return;
-      }
-      if (todayLogCache.pulang) {
-        alert('Anda sudah melakukan absen pulang hari ini!');
-        return;
-      }
-
+      if (!todayLogCache.masuk) return alert('Belum absen masuk hari ini!');
       const img = document.getElementById('imgPreviewPulang');
-      const laporan = document.getElementById('inputLaporanTugas').value;
-
-      if (img.classList.contains('hidden') || !img.src) {
-        alert('Wajib mengambil foto selfie bukti pulang!');
-        return;
-      }
+      if (img.classList.contains('hidden')) return alert('Wajib ambil foto!');
 
       const now = new Date();
       const newLog = {
@@ -600,89 +504,59 @@
         type: 'PULANG',
         status: 'Pulang',
         photo: img.src,
-        laporan: laporan
+        laporan: document.getElementById('inputLaporanTugas').value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      saveGlobalLog(newLog);
-      alert('Absen Pulang & Laporan Kerja Berhasil Disimpan!');
+      await db.collection('absen_logs').add(newLog);
+      alert('Absen Pulang Berhasil Disimpan ke Cloud!');
       checkTodayStatus();
     }
 
-    function saveGlobalLog(log) {
-      let allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
-      allLogs.unshift(log);
-      localStorage.setItem('ypt_global_logs', JSON.stringify(allLogs));
+    function subscribeRealtimeHrdLogs() {
+      db.collection('absen_logs').orderBy('createdAt', 'desc')
+        .onSnapshot((snapshot) => {
+          const tbody = document.getElementById('hrdLogTableBody');
+          tbody.innerHTML = '';
+          
+          if (snapshot.empty) {
+            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada data presensi.</td></tr>`;
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const log = doc.data();
+            let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${log.status}</span>`;
+            if (log.status === 'Terlambat') statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Terlambat</span>`;
+            if (log.status === 'Tepat Waktu') statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Tepat Waktu</span>`;
+
+            tbody.innerHTML += `
+              <tr class="hover:bg-slate-50 border-b border-slate-100">
+                <td class="p-3 font-mono text-slate-500">${log.time || '-'}</td>
+                <td class="p-3 font-bold text-slate-900">${log.userName}</td>
+                <td class="p-3 font-bold ${log.type === 'MASUK' ? 'text-red-600' : 'text-slate-800'}">${log.type}</td>
+                <td class="p-3">${statusBadge}</td>
+                <td class="p-3 text-slate-600 max-w-xs truncate">${log.laporan}</td>
+                <td class="p-3 text-center">
+                  <button onclick="openModalFoto('${log.photo}')" class="text-red-600 font-semibold hover:underline flex items-center justify-center space-x-1 mx-auto">
+                    <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                    <span>Foto</span>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+          lucide.createIcons();
+        });
     }
 
-    // LOAD LOGS UNTUK HRD AUDIT (MENAMPILKAN SEMUA DATA KARYAWAN)
-    function loadHrdLogs() {
-      const tbody = document.getElementById('hrdLogTableBody');
-      const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
-      tbody.innerHTML = '';
-
-      if (allLogs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada aktivitas presensi tercatat dari tim.</td></tr>`;
-        return;
-      }
-
-      allLogs.forEach((log) => {
-        let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${log.status}</span>`;
-        if (log.status === 'Terlambat') {
-          statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Terlambat</span>`;
-        } else if (log.status === 'Tepat Waktu') {
-          statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Tepat Waktu</span>`;
-        }
-
-        const row = `
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-mono text-slate-500 whitespace-nowrap">${log.time}</td>
-            <td class="p-3 font-bold text-slate-900">${log.userName}</td>
-            <td class="p-3 font-bold ${log.type === 'MASUK' ? 'text-red-600' : 'text-slate-800'}">${log.type}</td>
-            <td class="p-3">${statusBadge}</td>
-            <td class="p-3 text-slate-600 max-w-xs truncate">${log.laporan}</td>
-            <td class="p-3 text-center">
-              <button onclick="openModalFoto('${log.photo}')" class="text-red-600 font-semibold hover:underline flex items-center justify-center space-x-1 mx-auto">
-                <i data-lucide="image" class="w-3.5 h-3.5"></i>
-                <span>Lihat Foto</span>
-              </button>
-            </td>
-          </tr>
-        `;
-        tbody.innerHTML += row;
-      });
-
-      lucide.createIcons();
-    }
-
-    function handleGrantResetPermission(e) {
-      e.preventDefault();
-      const targetName = document.getElementById('selectGrantUser').value;
-      localStorage.setItem('ypt_grant_reset_' + targetName, 'true');
-      alert(`Izin reset PIN telah diaktifkan untuk ${targetName}. Karyawan bersangkutan dapat mendaftarkan PIN baru saat login berikutnya.`);
-    }
-
-   function openModalFoto(src) {
+    function openModalFoto(src) {
       document.getElementById('modalFotoImg').src = src;
       document.getElementById('modalFoto').classList.remove('hidden');
     }
     function closeModalFoto() {
       document.getElementById('modalFoto').classList.add('hidden');
     }
-
-    // KONFIGURASI FIREBASE DI DALAM SCRIPT
-    const firebaseConfig = {
-      apiKey: "AIzaSyA-YW_cash_fZYvqsQKjTKR9Rfuto7Mmmo",
-      authDomain: "ypt-absen-tracker.firebaseapp.com",
-      projectId: "ypt-absen-tracker",
-      storageBucket: "ypt-absen-tracker.firebasestorage.app",
-      messagingSenderId: "805494203970",
-      appId: "1:805494203970:web:515f3412194777d99a6fdb",
-      measurementId: "G-911XWQY969"
-    };
-
-    // Inisialisasi Firebase & Firestore
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-</script>
+  </script>
 </body>
 </html>
