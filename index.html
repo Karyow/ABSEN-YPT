@@ -4,24 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Absen Tracker - YPT Red & White Edition</title>
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Space Grotesk & Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+  <!-- SheetJS untuk Export Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <style>
     body { font-family: 'Poppins', sans-serif; }
     .font-space { font-family: 'Space Grotesk', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen antialiased flex flex-col justify-between">
 
+  <!-- TOP HEADER -->
   <header class="bg-white border-b-2 border-red-600 shadow-sm sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-space font-bold shadow-md">
+        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-space font-bold shadow-md shadow-red-600/30">
           <i data-lucide="shield-check" class="w-6 h-6"></i>
         </div>
         <div>
@@ -29,19 +45,23 @@
           <p class="text-[10px] text-red-600 font-bold tracking-wider uppercase">Yayasan Pendidikan Telkom</p>
         </div>
       </div>
+
       <div id="userInfoHeader" class="hidden items-center space-x-3">
         <div class="text-right hidden sm:block">
           <div id="headerUserName" class="text-xs font-bold text-slate-900">User</div>
           <div id="headerUserRole" class="text-[10px] text-red-600 font-semibold">Karyawan</div>
         </div>
-        <button onclick="handleLogout()" class="p-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-xl transition border border-slate-200">
+        <button onclick="handleLogout()" class="p-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-xl transition border border-slate-200" title="Keluar">
           <i data-lucide="log-out" class="w-4 h-4"></i>
         </button>
       </div>
     </div>
   </header>
 
+  <!-- MAIN CONTAINER -->
   <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
+
+    <!-- LOGIN & REGISTRATION SECTION -->
     <section id="loginSection" class="max-w-md mx-auto my-4 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
       <div class="relative z-10">
         <div class="text-center mb-6">
@@ -50,37 +70,56 @@
           <p class="text-xs text-slate-500 mt-1">Silakan pilih nama dan masukkan PIN 4 angka Anda</p>
         </div>
 
+        <!-- Mode Switcher -->
         <div class="grid grid-cols-2 bg-slate-100 p-1 rounded-xl border border-slate-200 mb-6 text-xs font-semibold">
-          <button id="btnTabKaryawan" onclick="switchLoginMode('karyawan')" class="py-2.5 rounded-lg bg-red-600 text-white transition font-space shadow-sm">Karyawan</button>
-          <button id="btnTabHrd" onclick="switchLoginMode('hrd')" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition font-space">HRD / Admin</button>
+          <button id="btnTabKaryawan" onclick="switchLoginMode('karyawan')" class="py-2.5 rounded-lg bg-red-600 text-white transition font-space shadow-sm">
+            Karyawan
+          </button>
+          <button id="btnTabHrd" onclick="switchLoginMode('hrd')" class="py-2.5 rounded-lg text-slate-600 hover:text-slate-900 transition font-space">
+            HRD / Admin
+          </button>
         </div>
 
+        <!-- FORM LOGIN KARYAWAN -->
         <form id="formLoginKaryawan" onsubmit="loginKaryawan(event)" class="space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Pilih Nama Karyawan</label>
             <select id="selectNamaKaryawan" onchange="checkUserRegisteredStatus()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:border-red-600 focus:outline-none transition" required>
-              <option value="">-- Pilih Nama --</option>
+              <option value="">-- Pilih Nama (6 Karyawan) --</option>
               <option value="Galuh">Galuh</option>
               <option value="Karyo">Karyo</option>
+              <option value="Amel">Amel</option>
+              <option value="Zabar">Zabar</option>
+              <option value="Anam">Anam</option>
               <option value="Raksa">Raksa</option>
             </select>
           </div>
+
           <div>
             <label id="labelPasswordKaryawan" class="block text-xs font-bold text-slate-700 uppercase mb-1.5">PIN 4 Angka</label>
             <input type="password" id="inputPassKaryawan" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs tracking-widest text-center text-lg text-slate-900 focus:border-red-600 focus:outline-none transition" required>
             <p id="subtextRegStatus" class="text-[11px] text-slate-500 mt-1.5">* Masukkan PIN 4 angka Anda.</p>
           </div>
-          <button type="submit" id="btnSubmitKaryawan" class="w-full bg-red-600 hover:bg-red-700 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-lg flex items-center justify-center space-x-2">
+
+          <button type="submit" id="btnSubmitKaryawan" class="w-full bg-red-600 hover:bg-red-700 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-lg shadow-red-600/20 flex items-center justify-center space-x-2">
             <span id="btnSubmitKaryawanText">Masuk Presensi</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
+
+          <div class="pt-3 text-center border-t border-slate-100">
+            <button type="button" onclick="alert('Untuk mengganti PIN, silakan hubungi HRD untuk diaktifkan izin reset PIN khusus.')" class="text-[11px] text-red-600 font-semibold hover:underline">
+              Lupa / Ingin Ganti PIN? Hubungi HRD
+            </button>
+          </div>
         </form>
 
+        <!-- FORM LOGIN HRD -->
         <form id="formLoginHrd" onsubmit="loginHrd(event)" class="space-y-4 hidden">
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Password HRD / Admin</label>
             <input type="password" id="inputPassHrd" placeholder="Masukkan Password HRD" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:border-red-600 focus:outline-none transition" required>
           </div>
+
           <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-2">
             <span>Masuk Portal HRD</span>
             <i data-lucide="shield-check" class="w-4 h-4"></i>
@@ -89,19 +128,42 @@
       </div>
     </section>
 
+    <!-- DASHBOARD SECTION -->
     <div id="dashboardSection" class="hidden space-y-6">
+
+      <!-- JAM KERJA & WAKTU REALTIME BAR -->
       <section class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Aturan Jam Kerja Kantor</span>
           <h2 id="welcomeText" class="font-space text-xl font-bold text-slate-900 mt-0.5">Portal Presensi Harian</h2>
+          <div class="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-600">
+            <span class="flex items-center space-x-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-red-600"></i><span>Masuk: <strong>08:00 WIB</strong></span></span>
+            <span>•</span>
+            <span class="flex items-center space-x-1"><i data-lucide="log-out" class="w-3.5 h-3.5 text-slate-700"></i><span>Pulang: <strong>16:30</strong> (Sen-Kam) / <strong>17:00</strong> (Jum)</span></span>
+          </div>
         </div>
+
         <div class="bg-slate-900 text-white rounded-xl p-3.5 px-5 text-right w-full md:w-auto shadow-sm">
           <div id="liveClock" class="font-space text-2xl font-bold text-white tracking-wider">00:00:00 WIB</div>
           <div id="liveDate" class="text-xs text-slate-300 mt-0.5">Senin, 19 Oktober 2026</div>
         </div>
       </section>
 
-      <section id="karyawanPanel" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- KARYAWAN MENU NAVIGATION -->
+      <div id="karyawanNavSection" class="flex border-b border-slate-200 gap-4 text-xs font-bold">
+        <button id="tabMenuAbsen" onclick="switchKaryawanView('absen')" class="pb-3 border-b-2 border-red-600 text-red-600 font-space flex items-center space-x-2">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Bagian Absensi Mandiri</span>
+        </button>
+        <button id="tabMenuDaftarHadir" onclick="switchKaryawanView('daftarHadir')" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900 font-space flex items-center space-x-2">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          <span>Daftar Hadir Karyawan Lain Hari Ini</span>
+        </button>
+      </div>
+
+      <!-- KARYAWAN VIEW 1: BAGIAN ABSENSI -->
+      <section id="viewKaryawanAbsen" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- ABSEN MASUK -->
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -111,16 +173,18 @@
               </div>
               <span id="badgeStatusMasuk" class="text-[10px] font-mono px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-semibold">Belum Absen</span>
             </div>
+
             <form id="formMasuk" onsubmit="handleAbsenMasuk(event)" class="space-y-4">
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Status Kehadiran Hari Ini</label>
-                <select id="selectStatusMasuk" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none">
+                <select id="selectStatusMasuk" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-red-600 focus:outline-none">
                   <option value="Masuk">Hadir (Masuk Kerja)</option>
                   <option value="Izin">Izin Tidak Masuk</option>
                   <option value="Sakit">Sakit</option>
                   <option value="Cuti">Cuti Kerja</option>
                 </select>
               </div>
+
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Foto Bukti Selfie (Kamera Langsung)</label>
                 <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-200">
@@ -128,23 +192,29 @@
                   <img id="imgPreviewMasuk" class="w-full h-full object-cover hidden" />
                   <div id="cameraMasukPlaceholder" class="text-center p-4 text-white">
                     <i data-lucide="camera" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
-                    <p class="text-[11px] text-slate-300">Klik Buka Kamera</p>
+                    <p class="text-[11px] text-slate-300">Klik Buka Kamera di bawah</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 mt-2">
                   <button type="button" onclick="startCamera('videoMasuk', 'cameraMasukPlaceholder')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
-                    <i data-lucide="aperture" class="w-3.5 h-3.5 text-red-600"></i><span>Buka Kamera</span>
+                    <i data-lucide="aperture" class="w-3.5 h-3.5 text-red-600"></i>
+                    <span>Buka Kamera</span>
                   </button>
                   <button type="button" onclick="capturePhoto('videoMasuk', 'imgPreviewMasuk')" class="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
-                    <i data-lucide="camera" class="w-3.5 h-3.5"></i><span>Jepret Foto</span>
+                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                    <span>Jepret Foto</span>
                   </button>
                 </div>
               </div>
-              <button type="submit" id="btnSubmitMasuk" class="w-full bg-red-600 hover:bg-red-700 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md">Simpan Absen Masuk (Cloud)</button>
+
+              <button type="submit" id="btnSubmitMasuk" class="w-full bg-red-600 hover:bg-red-700 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md shadow-red-600/20">
+                Simpan Absen Masuk
+              </button>
             </form>
           </div>
         </div>
 
+        <!-- ABSEN PULANG -->
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -154,6 +224,7 @@
               </div>
               <span id="badgeStatusPulang" class="text-[10px] font-mono px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-semibold">Belum Pulang</span>
             </div>
+
             <form id="formPulang" onsubmit="handleAbsenPulang(event)" class="space-y-4">
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Foto Bukti Pulang (Kamera Langsung)</label>
@@ -162,70 +233,154 @@
                   <img id="imgPreviewPulang" class="w-full h-full object-cover hidden" />
                   <div id="cameraPulangPlaceholder" class="text-center p-4 text-white">
                     <i data-lucide="camera" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
-                    <p class="text-[11px] text-slate-300">Klik Buka Kamera</p>
+                    <p class="text-[11px] text-slate-300">Klik Buka Kamera di bawah</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 mt-2">
                   <button type="button" onclick="startCamera('videoPulang', 'cameraPulangPlaceholder')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
-                    <i data-lucide="aperture" class="w-3.5 h-3.5 text-red-600"></i><span>Buka Kamera</span>
+                    <i data-lucide="aperture" class="w-3.5 h-3.5 text-red-600"></i>
+                    <span>Buka Kamera</span>
                   </button>
                   <button type="button" onclick="capturePhoto('videoPulang', 'imgPreviewPulang')" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition flex items-center justify-center space-x-1">
-                    <i data-lucide="camera" class="w-3.5 h-3.5"></i><span>Jepret Foto</span>
+                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                    <span>Jepret Foto</span>
                   </button>
                 </div>
               </div>
+
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Penjabaran Pekerjaan Hari Ini (Wajib)</label>
-                <textarea id="inputLaporanTugas" rows="3" placeholder="Rincikan poin-poin tugas yang diselesaikan hari ini..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none" required></textarea>
+                <textarea id="inputLaporanTugas" rows="3" placeholder="Rincikan poin-poin tugas yang diselesaikan hari ini..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-red-600 focus:outline-none" required></textarea>
               </div>
-              <button type="submit" id="btnSubmitPulang" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md">Simpan Absen Pulang & Laporan</button>
+
+              <button type="submit" id="btnSubmitPulang" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                Simpan Absen Pulang & Laporan
+              </button>
             </form>
           </div>
         </div>
       </section>
 
+      <!-- KARYAWAN VIEW 2: DAFTAR HADIR REKAN TIM (SIMBOLIS) -->
+      <section id="viewKaryawanDaftarHadir" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <h3 class="font-space font-bold text-slate-900 text-base">Status Kehadiran Rekan Kerja Hari Ini</h3>
+          <span class="text-[10px] bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-bold">Simbolis Real-time Tim</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="gridDaftarHadirTim">
+          <!-- Card Tim loaded via JS -->
+        </div>
+      </section>
+
+      <!-- HRD ADMINISTRATOR PANEL -->
       <section id="hrdPanel" class="hidden space-y-6">
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+          
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-100 gap-4">
             <div>
-              <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest">HR Management Console (Real-Time Cloud)</span>
-              <h3 class="font-space font-bold text-slate-900 text-lg mt-0.5">Audit Data Presensi Seluruh Tim</h3>
+              <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest">HR Management Console</span>
+              <h3 class="font-space font-bold text-slate-900 text-lg mt-0.5">Audit & Rekapitulasi Presensi Tim</h3>
             </div>
+
+            <!-- Grant Reset PIN Permission Form -->
+            <form onsubmit="handleGrantResetPermission(event)" class="flex items-center gap-2 w-full sm:w-auto">
+              <select id="selectGrantUser" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-900 focus:outline-none" required>
+                <option value="">-- Pilih Karyawan --</option>
+                <option value="Galuh">Galuh</option>
+                <option value="Karyo">Karyo</option>
+                <option value="Amel">Amel</option>
+                <option value="Zabar">Zabar</option>
+                <option value="Anam">Anam</option>
+                <option value="Raksa">Raksa</option>
+              </select>
+              <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-space font-bold text-xs px-3 py-1.5 rounded-xl transition whitespace-nowrap shadow-sm">
+                Izinkan Reset PIN
+              </button>
+            </form>
           </div>
-          <div class="overflow-x-auto">
+
+          <!-- HRD Subtabs: Harian vs Bulanan -->
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+              <button id="btnHrdTabHarian" onclick="switchHrdTab('harian')" class="px-4 py-2 rounded-lg bg-slate-900 text-white transition font-space">
+                Log Harian Keseluruhan
+              </button>
+              <button id="btnHrdTabBulanan" onclick="switchHrdTab('bulanan')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition font-space">
+                Rekapitulasi Bulanan
+              </button>
+            </div>
+
+            <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-space font-bold text-xs px-4 py-2 rounded-xl transition flex items-center space-x-2 shadow-sm">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+              <span>Download Rekap Excel (.xlsx)</span>
+            </button>
+          </div>
+
+          <!-- HRD TABLE HARIAN -->
+          <div id="hrdHarianContainer" class="overflow-x-auto">
             <table class="w-full text-xs text-left">
               <thead>
                 <tr class="bg-slate-900 text-white font-space border-b border-slate-200">
                   <th class="p-3">Waktu</th>
                   <th class="p-3">Karyawan</th>
                   <th class="p-3">Jenis</th>
-                  <th class="p-3">Status</th>
+                  <th class="p-3">Status / Ubah Status</th>
                   <th class="p-3">Laporan Pekerjaan</th>
                   <th class="p-3 text-center">Foto</th>
                 </tr>
               </thead>
-              <tbody id="hrdLogTableBody" class="divide-y divide-slate-100"></tbody>
+              <tbody id="hrdLogTableBody" class="divide-y divide-slate-100">
+                <!-- Data loaded via JS -->
+              </tbody>
             </table>
           </div>
+
+          <!-- HRD TABLE BULANAN -->
+          <div id="hrdBulananContainer" class="overflow-x-auto hidden">
+            <table class="w-full text-xs text-left">
+              <thead>
+                <tr class="bg-slate-900 text-white font-space border-b border-slate-200">
+                  <th class="p-3">Nama Karyawan</th>
+                  <th class="p-3 text-center">Tepat Waktu</th>
+                  <th class="p-3 text-center">Terlambat</th>
+                  <th class="p-3 text-center">Sakit</th>
+                  <th class="p-3 text-center">Izin / Cuti</th>
+                  <th class="p-3 text-center">Total Masuk Tercatat</th>
+                </tr>
+              </thead>
+              <tbody id="hrdMonthlyTableBody" class="divide-y divide-slate-100">
+                <!-- Monthly data loaded via JS -->
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </section>
+
     </div>
+
   </main>
 
+  <!-- MODAL VIEW FOTO -->
   <div id="modalFoto" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4" onclick="closeModalFoto()">
     <div class="bg-white rounded-2xl max-w-md w-full p-4 space-y-3" onclick="event.stopPropagation()">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <h4 class="font-bold text-slate-900 text-sm">Bukti Foto Presensi</h4>
-        <button onclick="closeModalFoto()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeModalFoto()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
       </div>
       <img id="modalFotoImg" src="" alt="Bukti Foto" class="w-full h-auto max-h-96 object-contain rounded-lg bg-black">
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-[11px] text-slate-500 font-space">
     © 2026 Yayasan Pendidikan Telkom (YPT) — Portal Presensi Karyawan
   </footer>
 
+  <!-- SCRIPT ENGINE & FIREBASE REALTIME SYNC -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA-YW_cash_fZYvqsQKjTKR9Rfuto7Mmmo",
@@ -243,7 +398,9 @@
     let currentUserState = null;
     let activeCameraStream = null;
     let todayLogCache = { masuk: null, pulang: null };
+    let globalLogsCache = [];
     const HRD_PASSWORD_SECRET = '12345asdfg';
+    const TEAM_MEMBERS = ['Galuh', 'Karyo', 'Amel', 'Zabar', 'Anam', 'Raksa'];
 
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
@@ -280,21 +437,42 @@
       }
     }
 
+    async function checkUserRegisteredStatus() {
+      const name = document.getElementById('selectNamaKaryawan').value;
+      if (!name) return;
+
+      try {
+        const userDoc = await db.collection('users').doc(name).get();
+        if (!userDoc.exists || userDoc.data().allowReset === true) {
+          document.getElementById('labelPasswordKaryawan').innerText = "Buat PIN 4 Angka Baru";
+          document.getElementById('subtextRegStatus').innerText = "* Pendaftaran awal / Reset izin: Buat PIN 4 angka.";
+          document.getElementById('btnSubmitKaryawanText').innerText = "Buat PIN & Masuk";
+        } else {
+          document.getElementById('labelPasswordKaryawan').innerText = "Masukkan PIN 4 Angka";
+          document.getElementById('subtextRegStatus').innerText = "* Masukkan PIN 4 angka akun Anda.";
+          document.getElementById('btnSubmitKaryawanText').innerText = "Masuk Presensi";
+        }
+      } catch (err) {
+        console.error('Check user err:', err);
+      }
+    }
+
     async function loginKaryawan(e) {
       e.preventDefault();
       const name = document.getElementById('selectNamaKaryawan').value;
       const inputPin = document.getElementById('inputPassKaryawan').value;
 
-      if (!name || inputPin.length !== 4) {
-        alert('Pilih nama dan isi PIN 4 angka!');
+      if (!name || inputPin.length !== 4 || isNaN(inputPin)) {
+        alert('Pilih nama dan masukkan PIN tepat 4 angka!');
         return;
       }
 
       try {
         const userDoc = await db.collection('users').doc(name).get();
-        if (!userDoc.exists) {
-          await db.collection('users').doc(name).set({ pin: inputPin });
-          alert(`PIN untuk ${name} berhasil didaftarkan!`);
+
+        if (!userDoc.exists || (userDoc.data() && userDoc.data().allowReset === true)) {
+          await db.collection('users').doc(name).set({ pin: inputPin, allowReset: false });
+          alert(`PIN 4 angka untuk ${name} berhasil dibuat!`);
           currentUserState = { name: name, role: 'karyawan' };
           onLoginSuccess();
         } else {
@@ -302,11 +480,11 @@
             currentUserState = { name: name, role: 'karyawan' };
             onLoginSuccess();
           } else {
-            alert('PIN salah!');
+            alert('PIN Salah! Hubungi HRD untuk meminta izin reset PIN.');
           }
         }
       } catch (err) {
-        alert('Gagal terhubung ke Cloud: ' + err.message);
+        alert('Gagal terhubung ke Cloud Database: ' + err.message);
       }
     }
 
@@ -330,14 +508,57 @@
       document.getElementById('headerUserRole').innerText = currentUserState.role === 'hrd' ? 'HRD Administrator' : 'Karyawan YPT';
 
       if (currentUserState.role === 'hrd') {
-        document.getElementById('karyawanPanel').classList.add('hidden');
+        document.getElementById('karyawanNavSection').classList.add('hidden');
+        document.getElementById('viewKaryawanAbsen').classList.add('hidden');
+        document.getElementById('viewKaryawanDaftarHadir').classList.add('hidden');
         document.getElementById('hrdPanel').classList.remove('hidden');
         subscribeRealtimeHrdLogs();
       } else {
-        document.getElementById('karyawanPanel').classList.remove('hidden');
+        document.getElementById('karyawanNavSection').classList.remove('hidden');
         document.getElementById('hrdPanel').classList.add('hidden');
         document.getElementById('welcomeText').innerText = `Halo, ${currentUserState.name}!`;
+        switchKaryawanView('absen');
         checkTodayStatus();
+      }
+    }
+
+    function switchKaryawanView(view) {
+      const tabAbsen = document.getElementById('tabMenuAbsen');
+      const tabDaftar = document.getElementById('tabMenuDaftarHadir');
+      const viewAbsen = document.getElementById('viewKaryawanAbsen');
+      const viewDaftar = document.getElementById('viewKaryawanDaftarHadir');
+
+      if (view === 'absen') {
+        tabAbsen.className = "pb-3 border-b-2 border-red-600 text-red-600 font-space flex items-center space-x-2 font-bold";
+        tabDaftar.className = "pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900 font-space flex items-center space-x-2";
+        viewAbsen.classList.remove('hidden');
+        viewDaftar.classList.add('hidden');
+      } else {
+        tabDaftar.className = "pb-3 border-b-2 border-red-600 text-red-600 font-space flex items-center space-x-2 font-bold";
+        tabAbsen.className = "pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900 font-space flex items-center space-x-2";
+        viewDaftar.classList.remove('hidden');
+        viewAbsen.classList.add('hidden');
+        loadDaftarHadirTim();
+      }
+    }
+
+    function switchHrdTab(tab) {
+      const btnHarian = document.getElementById('btnHrdTabHarian');
+      const btnBulanan = document.getElementById('btnHrdTabBulanan');
+      const containerHarian = document.getElementById('hrdHarianContainer');
+      const containerBulanan = document.getElementById('hrdBulananContainer');
+
+      if (tab === 'harian') {
+        btnHarian.className = "px-4 py-2 rounded-lg bg-slate-900 text-white transition font-space";
+        btnBulanan.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition font-space";
+        containerHarian.classList.remove('hidden');
+        containerBulanan.classList.add('hidden');
+      } else {
+        btnBulanan.className = "px-4 py-2 rounded-lg bg-slate-900 text-white transition font-space";
+        btnHarian.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition font-space";
+        containerBulanan.classList.remove('hidden');
+        containerHarian.classList.add('hidden');
+        renderMonthlySummary();
       }
     }
 
@@ -391,29 +612,41 @@
         .where('dateKey', '==', dateKey)
         .get();
 
+      todayLogCache = { masuk: null, pulang: null };
+
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (data.type === 'MASUK') {
-          todayLogCache.masuk = data;
-          document.getElementById('btnSubmitMasuk').disabled = true;
-          document.getElementById('btnSubmitMasuk').innerText = "Sudah Absen Masuk";
-        }
-        if (data.type === 'PULANG') {
-          todayLogCache.pulang = data;
-          document.getElementById('btnSubmitPulang').disabled = true;
-          document.getElementById('btnSubmitPulang').innerText = "Sudah Absen Pulang";
-        }
+        if (data.type === 'MASUK') todayLogCache.masuk = data;
+        if (data.type === 'PULANG') todayLogCache.pulang = data;
       });
+
+      if (todayLogCache.masuk) disableFormMasuk(todayLogCache.masuk.status);
+      if (todayLogCache.pulang) disableFormPulang();
+    }
+
+    function disableFormMasuk(status) {
+      document.getElementById('btnSubmitMasuk').disabled = true;
+      document.getElementById('btnSubmitMasuk').className = "w-full bg-slate-200 text-slate-500 font-space py-2.5 rounded-xl text-xs cursor-not-allowed font-bold";
+      document.getElementById('badgeStatusMasuk').innerText = 'Sudah Absen (' + status + ')';
+      document.getElementById('badgeStatusMasuk').className = "text-[10px] font-mono px-2.5 py-1 bg-red-100 text-red-700 rounded-full font-bold";
+    }
+
+    function disableFormPulang() {
+      document.getElementById('btnSubmitPulang').disabled = true;
+      document.getElementById('btnSubmitPulang').className = "w-full bg-slate-200 text-slate-500 font-space py-2.5 rounded-xl text-xs cursor-not-allowed font-bold";
+      document.getElementById('badgeStatusPulang').innerText = 'Sudah Absen Pulang';
+      document.getElementById('badgeStatusPulang').className = "text-[10px] font-mono px-2.5 py-1 bg-slate-900 text-white rounded-full font-bold";
     }
 
     async function handleAbsenMasuk(e) {
       e.preventDefault();
+      if (todayLogCache.masuk) return alert('Anda sudah melakukan absen masuk hari ini!');
       const img = document.getElementById('imgPreviewMasuk');
-      if (img.classList.contains('hidden')) return alert('Wajib ambil foto!');
+      if (img.classList.contains('hidden')) return alert('Wajib mengambil foto selfie terlebih dahulu!');
 
       const now = new Date();
       const statusType = document.getElementById('selectStatusMasuk').value;
-      let finalStatus = (statusType === 'Masuk' && (now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 0))) ? 'Terlambat' : 'Tepat Waktu';
+      let finalStatus = (statusType === 'Masuk' && (now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 0))) ? 'Terlambat' : statusType;
 
       const newLog = {
         dateKey: now.toISOString().split('T')[0],
@@ -427,15 +660,17 @@
       };
 
       await db.collection('absen_logs').add(newLog);
-      alert('Absen Masuk Berhasil Disimpan ke Cloud!');
+      alert('Absen Masuk Berhasil Disimpan ke Cloud Database!');
       checkTodayStatus();
     }
 
     async function handleAbsenPulang(e) {
       e.preventDefault();
-      if (!todayLogCache.masuk) return alert('Belum absen masuk hari ini!');
+      if (!todayLogCache.masuk) return alert('Anda belum melakukan absen masuk hari ini!');
+      if (todayLogCache.pulang) return alert('Anda sudah melakukan absen pulang hari ini!');
+
       const img = document.getElementById('imgPreviewPulang');
-      if (img.classList.contains('hidden')) return alert('Wajib ambil foto!');
+      if (img.classList.contains('hidden')) return alert('Wajib mengambil foto selfie bukti pulang!');
 
       const now = new Date();
       const newLog = {
@@ -450,31 +685,90 @@
       };
 
       await db.collection('absen_logs').add(newLog);
-      alert('Absen Pulang Berhasil Disimpan ke Cloud!');
+      alert('Absen Pulang & Laporan Kerja Berhasil Disimpan ke Cloud!');
       checkTodayStatus();
+    }
+
+    async function loadDaftarHadirTim() {
+      const grid = document.getElementById('gridDaftarHadirTim');
+      grid.innerHTML = '<div class="col-span-full text-center text-xs text-slate-400 py-4">Memuat data tim...</div>';
+
+      const dateKey = new Date().toISOString().split('T')[0];
+      const snapshot = await db.collection('absen_logs').where('dateKey', '==', dateKey).get();
+
+      const teamStatus = {};
+      TEAM_MEMBERS.forEach(m => {
+        teamStatus[m] = { masuk: null, pulang: null };
+      });
+
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (teamStatus[d.userName]) {
+          if (d.type === 'MASUK') teamStatus[d.userName].masuk = d;
+          if (d.type === 'PULANG') teamStatus[d.userName].pulang = d;
+        }
+      });
+
+      grid.innerHTML = '';
+      TEAM_MEMBERS.forEach(m => {
+        const status = teamStatus[m];
+        let statusTag = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">Belum Absen</span>';
+        
+        if (status.masuk) {
+          const st = status.masuk.status;
+          if (st === 'Terlambat') statusTag = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Terlambat</span>';
+          else if (st === 'Sakit') statusTag = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800">Sakit</span>';
+          else if (st === 'Izin' || st === 'Cuti') statusTag = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">${st}</span>`;
+          else statusTag = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Hadir</span>';
+        }
+
+        const card = `
+          <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex items-center justify-between">
+            <div>
+              <h4 class="font-bold text-slate-900 text-xs">${m}</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">Masuk: ${status.masuk ? status.masuk.time.split(' ')[1] : '-'}</p>
+              <p class="text-[10px] text-slate-500">Pulang: ${status.pulang ? status.pulang.time.split(' ')[1] : '-'}</p>
+            </div>
+            <div>${statusTag}</div>
+          </div>
+        `;
+        grid.innerHTML += card;
+      });
     }
 
     function subscribeRealtimeHrdLogs() {
       db.collection('absen_logs').orderBy('createdAt', 'desc')
         .onSnapshot((snapshot) => {
+          globalLogsCache = [];
           const tbody = document.getElementById('hrdLogTableBody');
           tbody.innerHTML = '';
+          
           if (snapshot.empty) {
             tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada data presensi.</td></tr>`;
             return;
           }
+
           snapshot.forEach((doc) => {
-            const log = doc.data();
-            let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${log.status}</span>`;
-            if (log.status === 'Terlambat') statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Terlambat</span>`;
-            if (log.status === 'Tepat Waktu') statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Tepat Waktu</span>`;
+            const log = { id: doc.id, ...doc.data() };
+            globalLogsCache.push(log);
+
+            let statusDropdown = `
+              <select onchange="updateLogStatus('${log.id}', this.value)" class="bg-slate-100 border border-slate-300 rounded px-2 py-1 text-[11px] font-bold text-slate-800 focus:outline-none">
+                <option value="Tepat Waktu" ${log.status === 'Tepat Waktu' ? 'selected' : ''}>Tepat Waktu</option>
+                <option value="Terlambat" ${log.status === 'Terlambat' ? 'selected' : ''}>Terlambat</option>
+                <option value="Sakit" ${log.status === 'Sakit' ? 'selected' : ''}>Sakit</option>
+                <option value="Izin" ${log.status === 'Izin' ? 'selected' : ''}>Izin</option>
+                <option value="Cuti" ${log.status === 'Cuti' ? 'selected' : ''}>Cuti</option>
+                <option value="Pulang" ${log.status === 'Pulang' ? 'selected' : ''}>Pulang</option>
+              </select>
+            `;
 
             tbody.innerHTML += `
               <tr class="hover:bg-slate-50 border-b border-slate-100">
                 <td class="p-3 font-mono text-slate-500">${log.time || '-'}</td>
                 <td class="p-3 font-bold text-slate-900">${log.userName}</td>
                 <td class="p-3 font-bold ${log.type === 'MASUK' ? 'text-red-600' : 'text-slate-800'}">${log.type}</td>
-                <td class="p-3">${statusBadge}</td>
+                <td class="p-3">${statusDropdown}</td>
                 <td class="p-3 text-slate-600 max-w-xs truncate">${log.laporan}</td>
                 <td class="p-3 text-center">
                   <button onclick="openModalFoto('${log.photo}')" class="text-red-600 font-semibold hover:underline flex items-center justify-center space-x-1 mx-auto">
@@ -486,6 +780,81 @@
           });
           lucide.createIcons();
         });
+    }
+
+    async function updateLogStatus(logId, newStatus) {
+      try {
+        await db.collection('absen_logs').doc(logId).update({ status: newStatus });
+        alert('Status presensi berhasil diubah oleh HRD!');
+      } catch (err) {
+        alert('Gagal mengubah status: ' + err.message);
+      }
+    }
+
+    function renderMonthlySummary() {
+      const tbody = document.getElementById('hrdMonthlyTableBody');
+      tbody.innerHTML = '';
+
+      const summary = {};
+      TEAM_MEMBERS.forEach(m => {
+        summary[m] = { tepatWaktu: 0, terlambat: 0, sakit: 0, izinCuti: 0, totalMasuk: 0 };
+      });
+
+      globalLogsCache.forEach(log => {
+        if (summary[log.userName]) {
+          if (log.type === 'MASUK') {
+            summary[log.userName].totalMasuk++;
+            if (log.status === 'Tepat Waktu') summary[log.userName].tepatWaktu++;
+            else if (log.status === 'Terlambat') summary[log.userName].terlambat++;
+            else if (log.status === 'Sakit') summary[log.userName].sakit++;
+            else if (log.status === 'Izin' || log.status === 'Cuti') summary[log.userName].izinCuti++;
+          }
+        }
+      });
+
+      TEAM_MEMBERS.forEach(m => {
+        const s = summary[m];
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="p-3 font-bold text-slate-900">${m}</td>
+            <td class="p-3 text-center text-emerald-700 font-bold">${s.tepatWaktu}</td>
+            <td class="p-3 text-center text-amber-700 font-bold">${s.terlambat}</td>
+            <td class="p-3 text-center text-purple-700 font-bold">${s.sakit}</td>
+            <td class="p-3 text-center text-blue-700 font-bold">${s.izinCuti}</td>
+            <td class="p-3 text-center font-mono font-bold">${s.totalMasuk}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function exportToExcel() {
+      if (globalLogsCache.length === 0) {
+        alert('Tidak ada data presensi untuk di-export.');
+        return;
+      }
+
+      const dataToExport = globalLogsCache.map(l => ({
+        Waktu: l.time,
+        Karyawan: l.userName,
+        Tipe: l.type,
+        Status: l.status,
+        'Laporan Tugas': l.laporan,
+        Tanggal: l.dateKey
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Presensi YPT");
+      XLSX.writeFile(workbook, "Rekap_Presensi_YPT.xlsx");
+    }
+
+    async function handleGrantResetPermission(e) {
+      e.preventDefault();
+      const targetName = document.getElementById('selectGrantUser').value;
+      if (!targetName) return;
+
+      await db.collection('users').doc(targetName).set({ allowReset: true }, { merge: true });
+      alert(`Izin reset PIN sekali pakai telah diaktifkan untuk ${targetName}.`);
     }
 
     function openModalFoto(src) {
