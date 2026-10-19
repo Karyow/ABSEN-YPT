@@ -23,7 +23,6 @@
     .font-space {
       font-family: 'Space Grotesk', sans-serif;
     }
-    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -39,7 +38,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen antialiased flex flex-col justify-between">
 
-  <!-- TOP HEADER (Merah & Putih Corporate) -->
+  <!-- TOP HEADER -->
   <header class="bg-white border-b-2 border-red-600 shadow-sm sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
@@ -65,7 +64,7 @@
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow">
+  <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
 
     <!-- LOGIN & REGISTRATION SECTION -->
     <section id="loginSection" class="max-w-md mx-auto my-4 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
@@ -75,7 +74,7 @@
         <div class="text-center mb-6">
           <span class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 text-[10px] font-bold rounded-full uppercase tracking-widest">Portal Presensi Resmi</span>
           <h2 class="font-space text-2xl font-bold text-slate-900 mt-2">Masuk Aplikasi</h2>
-          <p class="text-xs text-slate-500 mt-1">Silakan pilih nama dan masukkan password Anda</p>
+          <p class="text-xs text-slate-500 mt-1">Silakan pilih nama dan masukkan PIN 4 angka Anda</p>
         </div>
 
         <!-- Mode Switcher -->
@@ -88,11 +87,11 @@
           </button>
         </div>
 
-        <!-- FORM LOGIN / DAFTAR KARYAWAN -->
+        <!-- FORM LOGIN KARYAWAN -->
         <form id="formLoginKaryawan" onsubmit="loginKaryawan(event)" class="space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Pilih Nama Karyawan</label>
-            <select id="selectNamaKaryawan" onchange="checkUserRegisteredStatus()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 transition" required>
+            <select id="selectNamaKaryawan" onchange="checkUserRegisteredStatus()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:border-red-600 focus:outline-none transition" required>
               <option value="">-- Pilih Nama --</option>
               <option value="Galuh">Galuh</option>
               <option value="Karyo">Karyo</option>
@@ -101,9 +100,9 @@
           </div>
 
           <div>
-            <label id="labelPasswordKaryawan" class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Password</label>
-            <input type="password" id="inputPassKaryawan" placeholder="Masukkan Password" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 transition" required>
-            <p id="subtextRegStatus" class="text-[11px] text-slate-500 mt-1.5">* Masukkan password Anda untuk masuk.</p>
+            <label id="labelPasswordKaryawan" class="block text-xs font-bold text-slate-700 uppercase mb-1.5">PIN 4 Angka</label>
+            <input type="password" id="inputPassKaryawan" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs tracking-widest text-center text-lg text-slate-900 focus:border-red-600 focus:outline-none transition" required>
+            <p id="subtextRegStatus" class="text-[11px] text-slate-500 mt-1.5">* Masukkan PIN 4 angka Anda.</p>
           </div>
 
           <button type="submit" id="btnSubmitKaryawan" class="w-full bg-red-600 hover:bg-red-700 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-lg shadow-red-600/20 flex items-center justify-center space-x-2">
@@ -112,8 +111,8 @@
           </button>
 
           <div class="pt-3 text-center border-t border-slate-100">
-            <button type="button" onclick="alert('Untuk mengganti password, silakan hubungi HRD/Admin secara langsung untuk mendapatkan konfirmasi izin reset.')" class="text-[11px] text-red-600 font-semibold hover:underline">
-              Lupa / Ingin Ganti Password? Hubungi HRD
+            <button type="button" onclick="alert('Untuk mengganti PIN, silakan hubungi HRD/Admin secara langsung untuk mendapatkan konfirmasi izin reset.')" class="text-[11px] text-red-600 font-semibold hover:underline">
+              Lupa / Ingin Ganti PIN? Hubungi HRD
             </button>
           </div>
         </form>
@@ -122,7 +121,7 @@
         <form id="formLoginHrd" onsubmit="loginHrd(event)" class="space-y-4 hidden">
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Password HRD / Admin</label>
-            <input type="password" id="inputPassHrd" placeholder="Masukkan Password HRD" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 transition" required>
+            <input type="password" id="inputPassHrd" placeholder="Masukkan Password HRD" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:border-red-600 focus:outline-none transition" required>
           </div>
 
           <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-space font-bold py-2.5 rounded-xl text-xs transition shadow-md flex items-center justify-center space-x-2">
@@ -136,7 +135,7 @@
     <!-- DASHBOARD SECTION -->
     <div id="dashboardSection" class="hidden space-y-6">
 
-      <!-- JAM KERJA & WAKTU REALTIME BAR -->
+      <!-- JAM KERJA & WAKTU REALTIME BAR (Jam Warna Netral Elegan) -->
       <section class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Aturan Jam Kerja Kantor</span>
@@ -149,7 +148,7 @@
         </div>
 
         <div class="bg-slate-900 text-white rounded-xl p-3.5 px-5 text-right w-full md:w-auto shadow-sm">
-          <div id="liveClock" class="font-space text-2xl font-bold text-red-500 tracking-wider">00:00:00 WIB</div>
+          <div id="liveClock" class="font-space text-2xl font-bold text-white tracking-wider">00:00:00 WIB</div>
           <div id="liveDate" class="text-xs text-slate-300 mt-0.5">Senin, 19 Oktober 2026</div>
         </div>
       </section>
@@ -258,6 +257,32 @@
 
       </section>
 
+      <!-- REKAPITULASI ARSIP BULANAN PRIBADI KARYAWAN -->
+      <section id="karyawanArsipSection" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="font-space font-bold text-slate-900 text-base mb-1 flex items-center space-x-2">
+          <i data-lucide="calendar" class="w-4 h-4 text-red-600"></i>
+          <span>Arsip & Rekapitulasi Kehadiran Bulan Ini</span>
+        </h3>
+        <p class="text-xs text-slate-500 mb-4">Catatan arsip jam masuk dan jam pulang harian Anda.</p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-space border-b border-slate-200">
+                <th class="p-2.5">Tanggal</th>
+                <th class="p-2.5">Jam Masuk</th>
+                <th class="p-2.5">Status Masuk</th>
+                <th class="p-2.5">Jam Pulang</th>
+                <th class="p-2.5">Laporan Tugas</th>
+              </tr>
+            </thead>
+            <tbody id="userArsipTableBody" class="divide-y divide-slate-100">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- HRD ADMINISTRATOR PANEL -->
       <section id="hrdPanel" class="hidden space-y-6">
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
@@ -276,7 +301,7 @@
                 <option value="Raksa">Raksa</option>
               </select>
               <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-space font-bold text-xs px-3 py-1.5 rounded-xl transition whitespace-nowrap shadow-sm">
-                Izinkan Reset Password
+                Izinkan Reset PIN
               </button>
             </form>
           </div>
@@ -326,12 +351,9 @@
 
   <!-- SCRIPT ENGINE -->
   <script>
-    // State Aplikasi
-    let currentUserState = null; // { name: 'Galuh'|'Karyo'|'Raksa', role: 'karyawan'|'hrd' }
+    let currentUserState = null; 
     let activeCameraStream = null;
     let todayLogCache = { masuk: null, pulang: null };
-
-    // Password HRD Rahasia
     const HRD_PASSWORD_SECRET = '12345asdfg';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -369,60 +391,60 @@
       }
     }
 
-    // Cek Apakah Karyawan Sudah Punya Password (Pendaftaran 1x)
     function checkUserRegisteredStatus() {
       const name = document.getElementById('selectNamaKaryawan').value;
       if (!name) return;
 
-      const userPass = localStorage.getItem('ypt_pass_' + name);
+      const userPin = localStorage.getItem('ypt_pin_' + name);
       const isGrantReset = localStorage.getItem('ypt_grant_reset_' + name) === 'true';
 
-      if (!userPass || isGrantReset) {
-        document.getElementById('labelPasswordKaryawan').innerText = "Buat Password Akun Baru";
-        document.getElementById('inputPassKaryawan').placeholder = "Buat password Anda (1x Pendaftaran)";
-        document.getElementById('subtextRegStatus').innerText = "* Pendaftaran awal: Buat password 1 kali untuk akun Anda.";
+      if (!userPin || isGrantReset) {
+        document.getElementById('labelPasswordKaryawan').innerText = "Buat PIN 4 Angka Baru";
+        document.getElementById('inputPassKaryawan').placeholder = "••••";
+        document.getElementById('subtextRegStatus').innerText = "* Pendaftaran awal: Buat PIN tepat 4 angka.";
         document.getElementById('btnSubmitKaryawanText').innerText = "Buat Akun & Masuk";
       } else {
-        document.getElementById('labelPasswordKaryawan').innerText = "Masukkan Password";
-        document.getElementById('inputPassKaryawan').placeholder = "Masukkan password Anda";
-        document.getElementById('subtextRegStatus').innerText = "* Masukkan password Anda untuk masuk.";
+        document.getElementById('labelPasswordKaryawan').innerText = "Masukkan PIN 4 Angka";
+        document.getElementById('inputPassKaryawan').placeholder = "••••";
+        document.getElementById('subtextRegStatus').innerText = "* Masukkan PIN 4 angka Anda.";
         document.getElementById('btnSubmitKaryawanText').innerText = "Masuk Presensi";
       }
     }
 
-    // LOGIN / BUAT AKUN KARYAWAN
     function loginKaryawan(e) {
       e.preventDefault();
       const name = document.getElementById('selectNamaKaryawan').value;
-      const inputPass = document.getElementById('inputPassKaryawan').value;
+      const inputPin = document.getElementById('inputPassKaryawan').value;
 
       if (!name) {
         alert('Pilih nama karyawan terlebih dahulu!');
         return;
       }
 
-      const existingPass = localStorage.getItem('ypt_pass_' + name);
+      if (inputPin.length !== 4 || isNaN(inputPin)) {
+        alert('PIN harus tepat 4 angka!');
+        return;
+      }
+
+      const existingPin = localStorage.getItem('ypt_pin_' + name);
       const isGrantReset = localStorage.getItem('ypt_grant_reset_' + name) === 'true';
 
-      // Jika belum terdaftar ATAU diizinkan reset oleh HRD
-      if (!existingPass || isGrantReset) {
-        localStorage.setItem('ypt_pass_' + name, inputPass);
-        localStorage.removeItem('ypt_grant_reset_' + name); // Burn token
-        alert(`Password untuk ${name} berhasil dibuat! Silakan gunakan password ini untuk login seterusnya.`);
+      if (!existingPin || isGrantReset) {
+        localStorage.setItem('ypt_pin_' + name, inputPin);
+        localStorage.removeItem('ypt_grant_reset_' + name);
+        alert(`PIN untuk ${name} berhasil dibuat!`);
         currentUserState = { name: name, role: 'karyawan' };
         onLoginSuccess();
       } else {
-        // Proses Login Biasa
-        if (existingPass === inputPass) {
+        if (existingPin === inputPin) {
           currentUserState = { name: name, role: 'karyawan' };
           onLoginSuccess();
         } else {
-          alert('Password salah! Jika Anda lupa password, minta konfirmasi izin reset ke HRD.');
+          alert('PIN salah! Hubungi HRD untuk reset PIN.');
         }
       }
     }
 
-    // LOGIN HRD
     function loginHrd(e) {
       e.preventDefault();
       const pass = document.getElementById('inputPassHrd').value;
@@ -453,6 +475,7 @@
         document.getElementById('hrdPanel').classList.add('hidden');
         document.getElementById('welcomeText').innerText = `Halo, ${currentUserState.name}!`;
         checkTodayStatus();
+        loadUserArsip();
       }
     }
 
@@ -466,7 +489,6 @@
       document.getElementById('inputPassHrd').value = '';
     }
 
-    // MODULE KAMERA LANGSUNG (getUserMedia)
     async function startCamera(videoId, placeholderId) {
       stopCamera();
       try {
@@ -493,7 +515,7 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // High compression
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
       const img = document.getElementById(imgPreviewId);
       img.src = dataUrl;
       img.classList.remove('hidden');
@@ -508,7 +530,6 @@
       }
     }
 
-    // BATASAN 1X ABSEN SEHARI
     function checkTodayStatus() {
       const dateKey = new Date().toISOString().split('T')[0];
       const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
@@ -518,15 +539,11 @@
       const masukLog = userTodayLogs.find(l => l.type === 'MASUK');
       const pulangLog = userTodayLogs.find(l => l.type === 'PULANG');
 
-      if (masukLog) {
-        todayLogCache.masuk = masukLog;
-        disableFormMasuk(masukLog.status);
-      }
+      todayLogCache.masuk = masukLog || null;
+      todayLogCache.pulang = pulangLog || null;
 
-      if (pulangLog) {
-        todayLogCache.pulang = pulangLog;
-        disableFormPulang();
-      }
+      if (masukLog) disableFormMasuk(masukLog.status);
+      if (pulangLog) disableFormPulang();
     }
 
     function disableFormMasuk(status) {
@@ -543,7 +560,6 @@
       document.getElementById('badgeStatusPulang').className = "text-[10px] font-mono px-2.5 py-1 bg-slate-900 text-white rounded-full font-bold";
     }
 
-    // SUBMIT ABSEN MASUK
     function handleAbsenMasuk(e) {
       e.preventDefault();
       if (todayLogCache.masuk) {
@@ -561,7 +577,6 @@
       const statusType = document.getElementById('selectStatusMasuk').value;
       let finalStatus = statusType;
 
-      // Cek Keterlambatan (> 08:00 WIB)
       if (statusType === 'Masuk') {
         if (now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 0)) {
           finalStatus = 'Terlambat';
@@ -583,9 +598,9 @@
       saveGlobalLog(newLog);
       alert('Absen Masuk Berhasil Disimpan! Status: ' + finalStatus);
       checkTodayStatus();
+      loadUserArsip();
     }
 
-    // SUBMIT ABSEN PULANG
     function handleAbsenPulang(e) {
       e.preventDefault();
       if (!todayLogCache.masuk) {
@@ -619,6 +634,7 @@
       saveGlobalLog(newLog);
       alert('Absen Pulang & Laporan Kerja Berhasil Disimpan!');
       checkTodayStatus();
+      loadUserArsip();
     }
 
     function saveGlobalLog(log) {
@@ -627,14 +643,61 @@
       localStorage.setItem('ypt_global_logs', JSON.stringify(allLogs));
     }
 
-    // LOAD LOGS UNTUK HRD AUDIT
+    // LOAD ARSIP BULANAN PRIBADI KARYAWAN
+    function loadUserArsip() {
+      const tbody = document.getElementById('userArsipTableBody');
+      const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
+      tbody.innerHTML = '';
+
+      const userLogs = allLogs.filter(l => l.userName === currentUserState.name);
+      
+      // Group by dateKey
+      const groupedByDate = {};
+      userLogs.forEach(l => {
+        if (!groupedByDate[l.dateKey]) groupedByDate[l.dateKey] = { masuk: '-', pulang: '-', status: '-', laporan: '-' };
+        if (l.type === 'MASUK') {
+          groupedByDate[l.dateKey].masuk = l.time;
+          groupedByDate[l.dateKey].status = l.status;
+        }
+        if (l.type === 'PULANG') {
+          groupedByDate[l.dateKey].pulang = l.time;
+          groupedByDate[l.dateKey].laporan = l.laporan;
+        }
+      });
+
+      const dates = Object.keys(groupedByDate).sort().reverse();
+
+      if (dates.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada arsip riwayat bulan ini.</td></tr>`;
+        return;
+      }
+
+      dates.forEach(date => {
+        const item = groupedByDate[date];
+        let badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${item.status}</span>`;
+        if (item.status === 'Terlambat') badge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Terlambat</span>`;
+        if (item.status === 'Tepat Waktu') badge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Tepat Waktu</span>`;
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="p-2.5 font-semibold text-slate-900">${date}</td>
+            <td class="p-2.5 text-slate-600">${item.masuk}</td>
+            <td class="p-2.5">${badge}</td>
+            <td class="p-2.5 text-slate-600">${item.pulang}</td>
+            <td class="p-2.5 text-slate-600 max-w-xs truncate">${item.laporan}</td>
+          </tr>
+        `;
+      });
+    }
+
+    // LOAD LOGS UNTUK HRD AUDIT (SEMUA KARYAWAN)
     function loadHrdLogs() {
       const tbody = document.getElementById('hrdLogTableBody');
       const allLogs = JSON.parse(localStorage.getItem('ypt_global_logs') || '[]');
       tbody.innerHTML = '';
 
       if (allLogs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada aktivitas presensi tercatat.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada aktivitas presensi tercatat dari tim.</td></tr>`;
         return;
       }
 
@@ -667,15 +730,13 @@
       lucide.createIcons();
     }
 
-    // GRANT RESET PASSWORD PERMISSION
     function handleGrantResetPermission(e) {
       e.preventDefault();
       const targetName = document.getElementById('selectGrantUser').value;
       localStorage.setItem('ypt_grant_reset_' + targetName, 'true');
-      alert(`Izin reset password telah diaktifkan untuk ${targetName}. Karyawan bersangkutan dapat mendaftarkan password baru saat login berikutnya.`);
+      alert(`Izin reset PIN telah diaktifkan untuk ${targetName}. Karyawan bersangkutan dapat mendaftarkan PIN baru saat login berikutnya.`);
     }
 
-    // MODAL VIEW FOTO
     function openModalFoto(src) {
       document.getElementById('modalFotoImg').src = src;
       document.getElementById('modalFoto').classList.remove('hidden');
