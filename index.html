@@ -557,6 +557,23 @@
     function closeModalFoto() {
       document.getElementById('modalFoto').classList.add('hidden');
     }
+<script>
+    // Konfigurasi Firebase Anda
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-YW_cash_fZYvqsQKjTKR9Rfuto7Mmmo",
+      authDomain: "ypt-absen-tracker.firebaseapp.com",
+      projectId: "ypt-absen-tracker",
+      storageBucket: "ypt-absen-tracker.firebasestorage.app",
+      messagingSenderId: "805494203970",
+      appId: "1:805494203970:web:515f3412194777d99a6fdb",
+      measurementId: "G-911XWQY969"
+    };
+
+    // Inisialisasi Firebase & Firestore
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
   </script>
+</body>
+</html>
 </body>
 </html>
