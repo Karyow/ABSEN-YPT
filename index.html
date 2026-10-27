@@ -82,10 +82,10 @@
       </div>
 
       <div class="grid grid-cols-2 bg-[#050505] p-1 border border-[#191919] mb-6 text-xs font-bold">
-        <button id="btnTabKaryawan" onclick="switchLoginMode('karyawan')" class="py-2.5 bg-[#FF4B18] text-white transition font-space uppercase tracking-wider">
+        <button id="btnTabKaryawan" type="button" onclick="switchLoginMode('karyawan')" class="py-2.5 bg-[#FF4B18] text-white transition font-space uppercase tracking-wider">
           Karyawan
         </button>
-        <button id="btnTabHrd" onclick="switchLoginMode('hrd')" class="py-2.5 text-slate-400 hover:text-white transition font-space uppercase tracking-wider">
+        <button id="btnTabHrd" type="button" onclick="switchLoginMode('hrd')" class="py-2.5 text-slate-400 hover:text-white transition font-space uppercase tracking-wider">
           HRD / Admin
         </button>
       </div>
@@ -160,19 +160,19 @@
 
       <!-- 4 MENU UTAMA KARYAWAN -->
       <div id="karyawanNavSection" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-extrabold">
-        <button id="tabMenuAbsen" onclick="switchKaryawanView('absen')" class="p-3.5 bg-[#FF4B18] text-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
+        <button id="tabMenuAbsen" type="button" onclick="switchKaryawanView('absen')" class="p-3.5 bg-[#FF4B18] text-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
           <i data-lucide="user-check" class="w-4 h-4"></i>
           <span>1. Absen Masuk/Keluar</span>
         </button>
-        <button id="tabMenuDaftarHadir" onclick="switchKaryawanView('daftarHadir')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
+        <button id="tabMenuDaftarHadir" type="button" onclick="switchKaryawanView('daftarHadir')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
           <i data-lucide="users" class="w-4 h-4"></i>
           <span>2. Aktivitas Tim</span>
         </button>
-        <button id="tabMenuKalender" onclick="switchKaryawanView('kalender')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
+        <button id="tabMenuKalender" type="button" onclick="switchKaryawanView('kalender')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
           <i data-lucide="calendar" class="w-4 h-4"></i>
           <span>3. Kalender Histori</span>
         </button>
-        <button id="tabMenuLembur" onclick="switchKaryawanView('lembur')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
+        <button id="tabMenuLembur" type="button" onclick="switchKaryawanView('lembur')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
           <i data-lucide="clock-3" class="w-4 h-4"></i>
           <span>4. Form Lembur</span>
         </button>
@@ -306,9 +306,9 @@
           </div>
           <!-- Kontrol Bulan -->
           <div class="flex items-center space-x-2">
-            <button onclick="ubahBulanKalender(-1)" class="px-3 py-1.5 bg-[#191919] text-white text-xs font-bold hover:bg-[#FF4B18] transition">‹ Prev</button>
+            <button type="button" onclick="ubahBulanKalender(-1)" class="px-3 py-1.5 bg-[#191919] text-white text-xs font-bold hover:bg-[#FF4B18] transition">‹ Prev</button>
             <span id="labelBulanAktif" class="font-space font-extrabold text-xs uppercase px-2">Bulan Ini</span>
-            <button onclick="ubahBulanKalender(1)" class="px-3 py-1.5 bg-[#191919] text-white text-xs font-bold hover:bg-[#FF4B18] transition">Next ›</button>
+            <button type="button" onclick="ubahBulanKalender(1)" class="px-3 py-1.5 bg-[#191919] text-white text-xs font-bold hover:bg-[#FF4B18] transition">Next ›</button>
           </div>
         </div>
 
@@ -406,15 +406,15 @@
 
           <div class="flex items-center justify-between flex-wrap gap-3">
             <div class="flex bg-[#050505] p-1 border border-[#191919] text-xs font-bold">
-              <button id="btnHrdTabHarian" onclick="switchHrdTab('harian')" class="px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider">
+              <button id="btnHrdTabHarian" type="button" onclick="switchHrdTab('harian')" class="px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider">
                 Log Harian Keseluruhan
               </button>
-              <button id="btnHrdTabBulanan" onclick="switchHrdTab('bulanan')" class="px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider">
+              <button id="btnHrdTabBulanan" type="button" onclick="switchHrdTab('bulanan')" class="px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider">
                 Rekapitulasi Bulanan
               </button>
             </div>
 
-            <button onclick="exportToExcel()" class="bg-[#191919] hover:bg-emerald-700 text-white font-space font-extrabold text-xs px-4 py-2.5 uppercase tracking-wider transition flex items-center space-x-2">
+            <button type="button" onclick="exportToExcel()" class="bg-[#191919] hover:bg-emerald-700 text-white font-space font-extrabold text-xs px-4 py-2.5 uppercase tracking-wider transition flex items-center space-x-2">
               <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i>
               <span>Download Rekap Excel (.xlsx)</span>
             </button>
@@ -464,7 +464,7 @@
     <div class="bg-[#F5F4F0] border-2 border-[#191919] max-w-lg w-full p-4 space-y-3 shadow-[8px_8px_0px_0px_#FF4B18]" onclick="event.stopPropagation()">
       <div class="flex items-center justify-between pb-2 border-b-2 border-[#191919]">
         <h4 class="font-space font-extrabold text-[#151515] text-sm uppercase">Bukti Presensi / Dokumen</h4>
-        <button onclick="closeModalFoto()" class="p-1 bg-[#191919] text-white hover:bg-[#FF4B18]">
+        <button type="button" onclick="closeModalFoto()" class="p-1 bg-[#191919] text-white hover:bg-[#FF4B18]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -608,6 +608,11 @@
         return;
       }
 
+      const btnSubmit = document.getElementById('btnSubmitKaryawan');
+      const originalText = document.getElementById('btnSubmitKaryawanText').innerText;
+      btnSubmit.disabled = true;
+      document.getElementById('btnSubmitKaryawanText').innerText = "Proses Login...";
+
       try {
         const userDoc = await db.collection('users').doc(name).get();
 
@@ -626,6 +631,9 @@
         }
       } catch (err) {
         alert('Gagal terhubung ke Cloud Database: ' + err.message);
+      } finally {
+        btnSubmit.disabled = false;
+        document.getElementById('btnSubmitKaryawanText').innerText = originalText;
       }
     }
 
@@ -890,7 +898,7 @@
       });
     }
 
-    // --- MENU 3: KALENDER BULANAN HISTORI (PERBAIKAN UTAMA) ---
+    // --- MENU 3: KALENDER BULANAN HISTORI ---
     async function initKalenderBulanan() {
       const namaBulanArr = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       document.getElementById('labelBulanAktif').innerText = `${namaBulanArr[kalenderBulanAktif]} ${kalenderTahunAktif}`;
@@ -932,7 +940,6 @@
       const hariPertama = new Date(tahun, bulan, 1).getDay();
       const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
 
-      // Mapping data absen user berdasarkan dateKey (YYYY-MM-DD)
       const dataMap = {};
       cacheHistoriPribadi.forEach(item => {
         if (!dataMap[item.dateKey]) dataMap[item.dateKey] = { masuk: null, pulang: null };
@@ -940,12 +947,10 @@
         if (item.type === 'PULANG') dataMap[item.dateKey].pulang = item;
       });
 
-      // Render kotak kosong untuk offset hari pertama
       for (let i = 0; i < hariPertama; i++) {
         grid.innerHTML += `<div class="bg-slate-200/50 h-20 border border-slate-300 opacity-30"></div>`;
       }
 
-      // Render tanggal bulan aktif
       for (let d = 1; d <= jumlahHari; d++) {
         const mm = String(bulan + 1).padStart(2, '0');
         const dd = String(d).padStart(2, '0');
@@ -1005,7 +1010,7 @@
       content.innerHTML = html;
     }
 
-    // --- MENU 4: FORM LEMBUR MULTI-ENTRY (PERBAIKAN UTAMA) ---
+    // --- MENU 4: FORM LEMBUR MULTI-ENTRY ---
     function tambahBarisLembur() {
       const list = document.getElementById('listBarisLembur');
       const index = list.children.length + 1;
@@ -1084,7 +1089,6 @@
         let listLembur = [];
         snapshot.forEach(doc => listLembur.push(doc.data()));
         
-        // Urutkan dari tanggal terbaru secara lokal
         listLembur.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
         container.innerHTML = '';
@@ -1148,7 +1152,7 @@
                 <td class="p-3">${statusDropdown}</td>
                 <td class="p-3 text-slate-700 font-semibold max-w-xs truncate">${log.laporan}</td>
                 <td class="p-3 text-center">
-                  <button onclick="openModalFoto('${log.photo}', ${log.isDocument || false})" class="text-[#FF4B18] font-bold hover:underline flex items-center justify-center space-x-1 mx-auto text-[11px]">
+                  <button type="button" onclick="openModalFoto('${log.photo}', ${log.isDocument || false})" class="text-[#FF4B18] font-bold hover:underline flex items-center justify-center space-x-1 mx-auto text-[11px]">
                     <i data-lucide="${log.isDocument ? 'file-text' : 'image'}" class="w-3.5 h-3.5"></i><span>${fileBtnText}</span>
                   </button>
                 </td>
@@ -1232,7 +1236,7 @@
     }
 
     function closeModalFoto() {
-      document.getElementById('modalBox'] || document.getElementById('modalFoto').classList.add('hidden');
+      document.getElementById('modalFoto').classList.add('hidden');
     }
   </script>
 </body>
