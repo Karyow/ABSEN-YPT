@@ -31,7 +31,6 @@
     }
     .font-space { font-family: 'Space Grotesk', sans-serif; }
     
-    /* Editorial Style Sharp Borders & Panels */
     .border-sharp { border-color: #191919; }
     .bg-surface-cream { background-color: #F5F4F0; }
     .bg-panel-yellow { background-color: #FFD994; }
@@ -46,7 +45,7 @@
 </head>
 <body class="min-h-screen antialiased flex flex-col justify-between selection:bg-orange-500 selection:text-white">
 
-  <!-- TOP UTILITY BAR (Editorial Dark Style) -->
+  <!-- TOP UTILITY BAR -->
   <header class="bg-[#050505] border-b border-[#191919] sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center space-x-3">
@@ -71,10 +70,10 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT CONTAINER AREA -->
+  <!-- MAIN CONTENT CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
 
-    <!-- LOGIN & REGISTRATION SECTION (Editorial Floating Card) -->
+    <!-- LOGIN SECTION -->
     <section id="loginSection" class="max-w-md mx-auto my-6 bg-[#F5F4F0] border-2 border-[#191919] p-6 sm:p-8 shadow-[8px_8px_0px_0px_#191919]">
       <div class="text-center mb-6">
         <span class="px-3 py-1 bg-[#191919] text-[#FFD994] text-[9px] font-bold uppercase tracking-widest">System Cloud Sync Active</span>
@@ -142,7 +141,7 @@
     <!-- DASHBOARD SECTION -->
     <div id="dashboardSection" class="hidden space-y-6">
 
-      <!-- EDITORIAL HERO ATTENDANCE PANEL -->
+      <!-- HERO CLOCK BAR -->
       <section class="bg-[#FFD994] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <span class="px-2.5 py-1 bg-[#191919] text-white text-[9px] font-extrabold uppercase tracking-widest">Office Hours Standard</span>
@@ -154,29 +153,35 @@
           </div>
         </div>
 
-        <!-- REALTIME LIVE CLOCK PANEL -->
         <div class="bg-[#050505] border-2 border-[#191919] p-4 text-right w-full md:w-auto min-w-[220px]">
           <div id="liveClock" class="font-space text-2xl font-extrabold text-[#FFD994] tracking-wider">00:00:00 WIB</div>
           <div id="liveDate" class="text-[10px] font-bold text-white uppercase tracking-widest mt-1">Senin, 19 Oktober 2026</div>
         </div>
       </section>
 
-      <!-- KARYAWAN MENU NAVIGATION -->
-      <div id="karyawanNavSection" class="flex border-b-2 border-[#191919] gap-4 text-xs font-extrabold">
-        <button id="tabMenuAbsen" onclick="switchKaryawanView('absen')" class="pb-3 border-b-4 border-[#FF4B18] text-[#FF4B18] font-space uppercase tracking-wider flex items-center space-x-2">
+      <!-- 4 MENU UTAMA KARYAWAN -->
+      <div id="karyawanNavSection" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-extrabold">
+        <button id="tabMenuAbsen" onclick="switchKaryawanView('absen')" class="p-3.5 bg-[#FF4B18] text-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
           <i data-lucide="user-check" class="w-4 h-4"></i>
-          <span>Bagian Absensi Mandiri</span>
+          <span>1. Absen Masuk/Keluar</span>
         </button>
-        <button id="tabMenuDaftarHadir" onclick="switchKaryawanView('daftarHadir')" class="pb-3 border-b-4 border-transparent text-slate-400 hover:text-white font-space uppercase tracking-wider flex items-center space-x-2">
+        <button id="tabMenuDaftarHadir" onclick="switchKaryawanView('daftarHadir')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
           <i data-lucide="users" class="w-4 h-4"></i>
-          <span>Daftar Hadir Tim Hari Ini</span>
+          <span>2. Aktivitas Tim</span>
+        </button>
+        <button id="tabMenuKalender" onclick="switchKaryawanView('kalender')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
+          <i data-lucide="calendar" class="w-4 h-4"></i>
+          <span>3. Kalender Histori</span>
+        </button>
+        <button id="tabMenuLembur" onclick="switchKaryawanView('lembur')" class="p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition">
+          <i data-lucide="clock-3" class="w-4 h-4"></i>
+          <span>4. Form Lembur</span>
         </button>
       </div>
 
-      <!-- KARYAWAN VIEW 1: BAGIAN ABSENSI -->
+      <!-- KARYAWAN VIEW 1: ABSENSI -->
       <section id="viewKaryawanAbsen" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- PANEL ABSEN MASUK -->
+        <!-- ABSEN MASUK -->
         <div class="bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-[#191919]">
@@ -198,7 +203,6 @@
                 </select>
               </div>
 
-              <!-- MODE 1: CAMERA SELFIE -->
               <div id="containerCameraMasuk">
                 <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest mb-1.5">Foto Bukti Selfie (Kamera Langsung)</label>
                 <div class="relative bg-[#050505] border-2 border-[#191919] overflow-hidden aspect-video flex items-center justify-center">
@@ -221,7 +225,6 @@
                 </div>
               </div>
 
-              <!-- MODE 2: UPLOAD DOKUMEN/SURAT (IZIN / SAKIT) -->
               <div id="containerFileMasuk" class="hidden">
                 <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest mb-1.5">Unggah Surat Keterangan / Dokumen (PDF, PNG, JPG)</label>
                 <div class="border-2 border-dashed border-[#191919] bg-white p-4 text-center">
@@ -241,7 +244,7 @@
           </div>
         </div>
 
-        <!-- PANEL ABSEN PULANG -->
+        <!-- ABSEN PULANG -->
         <div class="bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-[#191919]">
@@ -276,7 +279,7 @@
               </div>
 
               <div>
-                <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest mb-1.5">Penjabaran Pekerjaan Hari Ini (Wajib)</label>
+                <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest mb-1.5">Penjabaran Pekerjaan Harian (Wajib)</label>
                 <textarea id="inputLaporanTugas" rows="3" placeholder="Rincikan poin-poin tugas yang diselesaikan hari ini..." class="w-full bg-white border-2 border-[#191919] p-2.5 text-xs text-[#151515] font-semibold focus:outline-none focus:border-[#FF4B18]" required></textarea>
               </div>
 
@@ -288,15 +291,67 @@
         </div>
       </section>
 
-      <!-- KARYAWAN VIEW 2: DAFTAR HADIR TIM -->
+      <!-- KARYAWAN VIEW 2: AKTIVITAS TIM -->
       <section id="viewKaryawanDaftarHadir" class="hidden bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-4">
         <div class="flex items-center justify-between pb-3 border-b-2 border-[#191919]">
           <h3 class="font-space font-extrabold text-[#151515] text-base uppercase">Status Kehadiran Rekan Kerja Hari Ini</h3>
           <span class="text-[9px] bg-[#191919] text-[#FFD994] px-3 py-1 font-bold uppercase tracking-wider">Simbolis Real-time Tim</span>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="gridDaftarHadirTim"></div>
+      </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="gridDaftarHadirTim">
-          <!-- Card Tim loaded via JS -->
+      <!-- KARYAWAN VIEW 3: KALENDER HISTORI -->
+      <section id="viewKaryawanKalender" class="hidden bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b-2 border-[#191919]">
+          <h3 class="font-space font-extrabold text-[#151515] text-base uppercase">Kalender & Histori Kehadiran Saya</h3>
+          <span class="text-[9px] bg-[#FF4B18] text-white px-3 py-1 font-bold uppercase tracking-wider">Rekap Riwayat Harian</span>
+        </div>
+        <div id="containerHistoriKalender" class="space-y-3">
+          <!-- Histori dimuat via JS -->
+        </div>
+      </section>
+
+      <!-- KARYAWAN VIEW 4: FORM LEMBUR (MULTI-ENTRY DENGAN TOMBOL + BULAT) -->
+      <section id="viewKaryawanLembur" class="hidden bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b-2 border-[#191919]">
+          <div>
+            <h3 class="font-space font-extrabold text-[#151515] text-base uppercase">Form Pengajuan & Rincian Lembur</h3>
+            <p class="text-[10px] text-slate-600 mt-0.5">Anda dapat mengisi lembur beberapa kali dalam sebulan dengan menekan tombol (+) bulat di bawah.</p>
+          </div>
+          <span class="text-[9px] bg-[#191919] text-white px-3 py-1 font-bold uppercase tracking-wider">Multi-Entry Lembur</span>
+        </div>
+
+        <form id="formLemburMulti" onsubmit="submitFormLembur(event)" class="space-y-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest mb-1.5">Tanggal Lembur</label>
+            <input type="date" id="lemburTanggal" class="w-full bg-white border-2 border-[#191919] p-2.5 text-xs font-bold text-[#151515] focus:outline-none" required>
+          </div>
+
+          <!-- CONTAINER DAFTAR TUGAS LEMBUR DENGAN TOMBOL + -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest">Rincian Jam & Pekerjaan Lembur</label>
+              <!-- TOMBOL PLUS BULAT -->
+              <button type="button" onclick="tambahBarisLembur()" class="w-8 h-8 rounded-full bg-[#FF4B18] text-white flex items-center justify-center font-bold hover:bg-black transition shadow" title="Tambah Baris Lembur">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div id="listBarisLembur" class="space-y-3">
+              <!-- Baris dinamis ditambahkan disini -->
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-[#191919] hover:bg-[#FF4B18] text-white font-space font-extrabold py-3 text-xs uppercase tracking-widest transition">
+            Simpan & Kirim Data Lembur
+          </button>
+        </form>
+
+        <div class="mt-6 pt-4 border-t-2 border-[#191919]">
+          <h4 class="font-space font-extrabold text-xs uppercase text-[#151515] mb-2">Riwayat Lembur Bulan Ini</h4>
+          <div id="riwayatLemburContainer" class="space-y-2">
+            <!-- Riwayat dimuat disini -->
+          </div>
         </div>
       </section>
 
@@ -310,7 +365,6 @@
               <h3 class="font-space font-extrabold text-[#151515] text-lg uppercase mt-0.5">Audit & Rekapitulasi Presensi Tim</h3>
             </div>
 
-            <!-- Grant Reset PIN Permission Form -->
             <form onsubmit="handleGrantResetPermission(event)" class="flex items-center gap-2 w-full sm:w-auto">
               <select id="selectGrantUser" class="bg-white border-2 border-[#191919] px-3 py-2 text-xs font-bold text-[#151515] focus:outline-none" required>
                 <option value="">-- Pilih Karyawan --</option>
@@ -327,7 +381,6 @@
             </form>
           </div>
 
-          <!-- HRD Subtabs & Download Excel -->
           <div class="flex items-center justify-between flex-wrap gap-3">
             <div class="flex bg-[#050505] p-1 border border-[#191919] text-xs font-bold">
               <button id="btnHrdTabHarian" onclick="switchHrdTab('harian')" class="px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider">
@@ -344,7 +397,6 @@
             </button>
           </div>
 
-          <!-- HRD TABLE HARIAN -->
           <div id="hrdHarianContainer" class="overflow-x-auto border-2 border-[#191919]">
             <table class="w-full text-xs text-left bg-white">
               <thead>
@@ -357,13 +409,10 @@
                   <th class="p-3 text-center">Foto / Dokumen</th>
                 </tr>
               </thead>
-              <tbody id="hrdLogTableBody" class="divide-y divide-[#191919]">
-                <!-- Data loaded via JS -->
-              </tbody>
+              <tbody id="hrdLogTableBody" class="divide-y divide-[#191919]"></tbody>
             </table>
           </div>
 
-          <!-- HRD TABLE BULANAN -->
           <div id="hrdBulananContainer" class="overflow-x-auto border-2 border-[#191919] hidden">
             <table class="w-full text-xs text-left bg-white">
               <thead>
@@ -376,9 +425,7 @@
                   <th class="p-3 text-center">Total Masuk Tercatat</th>
                 </tr>
               </thead>
-              <tbody id="hrdMonthlyTableBody" class="divide-y divide-[#191919]">
-                <!-- Monthly data loaded via JS -->
-              </tbody>
+              <tbody id="hrdMonthlyTableBody" class="divide-y divide-[#191919]"></tbody>
             </table>
           </div>
 
@@ -389,7 +436,7 @@
 
   </main>
 
-  <!-- MODAL VIEW FOTO / ATTACHMENT -->
+  <!-- MODAL VIEW FOTO -->
   <div id="modalFoto" class="fixed inset-0 bg-[#050505]/90 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4" onclick="closeModalFoto()">
     <div class="bg-[#F5F4F0] border-2 border-[#191919] max-w-lg w-full p-4 space-y-3 shadow-[8px_8px_0px_0px_#FF4B18]" onclick="event.stopPropagation()">
       <div class="flex items-center justify-between pb-2 border-b-2 border-[#191919]">
@@ -404,12 +451,11 @@
     </div>
   </div>
 
-  <!-- FOOTER EDITORIAL DARK -->
   <footer class="bg-[#050505] border-t border-[#191919] py-4 text-center text-[10px] text-slate-500 font-space tracking-widest uppercase">
     © 2026 Yayasan Pendidikan Telkom (YPT) — Editorial Presensi Web Platform
   </footer>
 
-  <!-- SCRIPT ENGINE & FIREBASE REALTIME SYNC -->
+  <!-- SCRIPT ENGINE -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA-YW_cash_fZYvqsQKjTKR9Rfuto7Mmmo",
@@ -435,6 +481,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       initLiveClock();
+      document.getElementById('lemburTanggal').valueAsDate = new Date();
+      tambahBarisLembur(); // Inisialisasi baris pertama form lembur
     });
 
     function initLiveClock() {
@@ -575,6 +623,8 @@
         document.getElementById('karyawanNavSection').classList.add('hidden');
         document.getElementById('viewKaryawanAbsen').classList.add('hidden');
         document.getElementById('viewKaryawanDaftarHadir').classList.add('hidden');
+        document.getElementById('viewKaryawanKalender').classList.add('hidden');
+        document.getElementById('viewKaryawanLembur').classList.add('hidden');
         document.getElementById('hrdPanel').classList.remove('hidden');
         subscribeRealtimeHrdLogs();
       } else {
@@ -586,24 +636,27 @@
       }
     }
 
+    // NAVIGASI 4 MENU KARYAWAN
     function switchKaryawanView(view) {
-      const tabAbsen = document.getElementById('tabMenuAbsen');
-      const tabDaftar = document.getElementById('tabMenuDaftarHadir');
-      const viewAbsen = document.getElementById('viewKaryawanAbsen');
-      const viewDaftar = document.getElementById('viewKaryawanDaftarHadir');
+      const views = ['absen', 'daftarHadir', 'kalender', 'lembur'];
+      const btnIds = { absen: 'tabMenuAbsen', daftarHadir: 'tabMenuDaftarHadir', kalender: 'tabMenuKalender', lembur: 'tabMenuLembur' };
+      const sectionIds = { absen: 'viewKaryawanAbsen', daftarHadir: 'viewKaryawanDaftarHadir', kalender: 'viewKaryawanKalender', lembur: 'viewKaryawanLembur' };
 
-      if (view === 'absen') {
-        tabAbsen.className = "pb-3 border-b-4 border-[#FF4B18] text-[#FF4B18] font-space uppercase tracking-wider flex items-center space-x-2 font-bold";
-        tabDaftar.className = "pb-3 border-b-4 border-transparent text-slate-400 hover:text-white font-space uppercase tracking-wider flex items-center space-x-2";
-        viewAbsen.classList.remove('hidden');
-        viewDaftar.classList.add('hidden');
-      } else {
-        tabDaftar.className = "pb-3 border-b-4 border-[#FF4B18] text-[#FF4B18] font-space uppercase tracking-wider flex items-center space-x-2 font-bold";
-        tabAbsen.className = "pb-3 border-b-4 border-transparent text-slate-400 hover:text-white font-space uppercase tracking-wider flex items-center space-x-2";
-        viewDaftar.classList.remove('hidden');
-        viewAbsen.classList.add('hidden');
-        loadDaftarHadirTim();
-      }
+      views.forEach(v => {
+        const btn = document.getElementById(btnIds[v]);
+        const sec = document.getElementById(sectionIds[v]);
+        if (v === view) {
+          btn.className = "p-3.5 bg-[#FF4B18] text-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition";
+          sec.classList.remove('hidden');
+        } else {
+          btn.className = "p-3.5 bg-[#F5F4F0] text-[#151515] hover:bg-white font-space uppercase tracking-wider flex items-center justify-center space-x-2 border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919] transition";
+          sec.classList.add('hidden');
+        }
+      });
+
+      if (view === 'daftarHadir') loadDaftarHadirTim();
+      if (view === 'kalender') loadKalenderHistori();
+      if (view === 'lembur') loadRiwayatLembur();
     }
 
     function switchHrdTab(tab) {
@@ -678,7 +731,6 @@
         .get();
 
       todayLogCache = { masuk: null, pulang: null };
-
       snapshot.forEach(doc => {
         const data = doc.data();
         if (data.type === 'MASUK') todayLogCache.masuk = data;
@@ -773,9 +825,7 @@
       const snapshot = await db.collection('absen_logs').where('dateKey', '==', dateKey).get();
 
       const teamStatus = {};
-      TEAM_MEMBERS.forEach(m => {
-        teamStatus[m] = { masuk: null, pulang: null };
-      });
+      TEAM_MEMBERS.forEach(m => { teamStatus[m] = { masuk: null, pulang: null }; });
 
       snapshot.forEach(doc => {
         const d = doc.data();
@@ -789,7 +839,6 @@
       TEAM_MEMBERS.forEach(m => {
         const status = teamStatus[m];
         let statusTag = '<span class="px-2.5 py-1 text-[9px] font-extrabold bg-[#050505] text-slate-400 uppercase tracking-wider">Belum Absen</span>';
-        
         if (status.masuk) {
           const st = status.masuk.status;
           if (st === 'Terlambat') statusTag = '<span class="px-2.5 py-1 text-[9px] font-extrabold bg-[#FF4B18] text-white uppercase tracking-wider">Terlambat</span>';
@@ -798,7 +847,7 @@
           else statusTag = '<span class="px-2.5 py-1 text-[9px] font-extrabold bg-emerald-600 text-white uppercase tracking-wider">Hadir</span>';
         }
 
-        const card = `
+        grid.innerHTML += `
           <div class="p-4 border-2 border-[#191919] bg-white flex items-center justify-between shadow-[4px_4px_0px_0px_#191919]">
             <div>
               <h4 class="font-space font-extrabold text-[#151515] text-xs uppercase">${m}</h4>
@@ -808,7 +857,132 @@
             <div>${statusTag}</div>
           </div>
         `;
-        grid.innerHTML += card;
+      });
+    }
+
+    // MENU 3: KALENDER / HISTORI PRIBADI
+    async function loadKalenderHistori() {
+      const container = document.getElementById('containerHistoriKalender');
+      container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Memuat histori pribadi...</p>';
+
+      const snapshot = await db.collection('absen_logs')
+        .where('userName', '==', currentUserState.name)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      if (snapshot.empty) {
+        container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Belum ada riwayat kehadiran tercatat.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        container.innerHTML += `
+          <div class="p-4 bg-white border-2 border-[#191919] flex items-center justify-between shadow-[4px_4px_0px_0px_#191919]">
+            <div>
+              <span class="text-[10px] font-mono bg-[#050505] text-[#FFD994] px-2 py-0.5 font-bold">${d.dateKey}</span>
+              <h4 class="font-space font-extrabold text-sm text-[#151515] mt-1">${d.type} — ${d.status}</h4>
+              <p class="text-[11px] text-slate-600 mt-0.5">Waktu: ${d.time}</p>
+              ${d.laporan !== '-' ? `<p class="text-[11px] text-slate-700 italic mt-1">Laporan: "${d.laporan}"</p>` : ''}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // MENU 4: FORM LEMBUR DINAMIS (TOMBOL + BULAT)
+    function tambahBarisLembur() {
+      const list = document.getElementById('listBarisLembur');
+      const index = list.children.length + 1;
+
+      const item = document.createElement('div');
+      item.className = "p-3 bg-white border-2 border-[#191919] space-y-2 relative shadow-[3px_3px_0px_0px_#191919]";
+      item.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-extrabold uppercase text-[#FF4B18]">Sesi Lembur #${index}</span>
+          ${index > 1 ? `<button type="button" onclick="this.closest('div.p-3').remove()" class="text-red-600 hover:text-black text-xs font-bold uppercase">Hapus</button>` : ''}
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[9px] font-bold uppercase text-slate-600 mb-1">Jam Mulai</label>
+            <input type="time" class="lemburMulai w-full bg-[#F5F4F0] border border-[#191919] p-2 text-xs font-bold" required>
+          </div>
+          <div>
+            <label class="block text-[9px] font-bold uppercase text-slate-600 mb-1">Jam Selesai</label>
+            <input type="time" class="lemburSelesai w-full bg-[#F5F4F0] border border-[#191919] p-2 text-xs font-bold" required>
+          </div>
+        </div>
+        <div>
+          <label class="block text-[9px] font-bold uppercase text-slate-600 mb-1">Deskripsi Pekerjaan Lembur</label>
+          <textarea class="lemburDeskripsi w-full bg-[#F5F4F0] border border-[#191919] p-2 text-xs font-semibold" rows="2" placeholder="Uraikan tugas yang diselesaikan saat lembur..." required></textarea>
+        </div>
+      `;
+      list.appendChild(item);
+    }
+
+    async function submitFormLembur(e) {
+      e.preventDefault();
+      const tanggal = document.getElementById('lemburTanggal').value;
+      const barisList = document.querySelectorAll('#listBarisLembur > div');
+      
+      const rincianLembur = [];
+      barisList.forEach(baris => {
+        rincianLembur.push({
+          mulai: baris.querySelector('.lemburMulai').value,
+          selesai: baris.querySelector('.lemburSelesai').value,
+          deskripsi: baris.querySelector('.lemburDeskripsi').value
+        });
+      });
+
+      const dataLembur = {
+        userName: currentUserState.name,
+        tanggal: tanggal,
+        rincian: rincianLembur,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await db.collection('lembur_logs').add(dataLembur);
+        alert('Form lembur berhasil dikirimkan!');
+        document.getElementById('listBarisLembur').innerHTML = '';
+        tambahBarisLembur();
+        loadRiwayatLembur();
+      } catch (err) {
+        alert('Gagal menyimpan lembur: ' + err.message);
+      }
+    }
+
+    async function loadRiwayatLembur() {
+      const container = document.getElementById('riwayatLemburContainer');
+      container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Memuat riwayat lembur...</p>';
+
+      const snapshot = await db.collection('lembur_logs')
+        .where('userName', '==', currentUserState.name)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      if (snapshot.empty) {
+        container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Belum ada riwayat lembur bulan ini.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        let rincianHTML = '';
+        d.rincian.forEach((r, idx) => {
+          rincianHTML += `<div class="text-[11px] text-slate-700 mt-1 pl-2 border-l-2 border-[#FF4B18]"><strong>Sesi ${idx+1} (${r.mulai} - ${r.selesai}):</strong> ${r.deskripsi}</div>`;
+        });
+
+        container.innerHTML += `
+          <div class="p-3 bg-white border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919]">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono bg-[#050505] text-[#FFD994] px-2 py-0.5 font-bold">${d.tanggal}</span>
+            </div>
+            ${rincianHTML}
+          </div>
+        `;
       });
     }
 
@@ -874,9 +1048,7 @@
       tbody.innerHTML = '';
 
       const summary = {};
-      TEAM_MEMBERS.forEach(m => {
-        summary[m] = { tepatWaktu: 0, terlambat: 0, sakit: 0, izinCuti: 0, totalMasuk: 0 };
-      });
+      TEAM_MEMBERS.forEach(m => { summary[m] = { tepatWaktu: 0, terlambat: 0, sakit: 0, izinCuti: 0, totalMasuk: 0 }; });
 
       globalLogsCache.forEach(log => {
         if (summary[log.userName]) {
@@ -906,20 +1078,10 @@
     }
 
     function exportToExcel() {
-      if (globalLogsCache.length === 0) {
-        alert('Tidak ada data presensi untuk di-export.');
-        return;
-      }
-
+      if (globalLogsCache.length === 0) return alert('Tidak ada data presensi untuk di-export.');
       const dataToExport = globalLogsCache.map(l => ({
-        Waktu: l.time,
-        Karyawan: l.userName,
-        Tipe: l.type,
-        Status: l.status,
-        'Laporan Tugas': l.laporan,
-        Tanggal: l.dateKey
+        Waktu: l.time, Karyawan: l.userName, Tipe: l.type, Status: l.status, 'Laporan Tugas': l.laporan, Tanggal: l.dateKey
       }));
-
       const worksheet = XLSX.utils.json_to_sheet(dataToExport);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Presensi YPT");
@@ -930,7 +1092,6 @@
       e.preventDefault();
       const targetName = document.getElementById('selectGrantUser').value;
       if (!targetName) return;
-
       await db.collection('users').doc(targetName).set({ allowReset: true }, { merge: true });
       alert(`Izin reset PIN sekali pakai telah diaktifkan untuk ${targetName}.`);
     }
