@@ -154,7 +154,7 @@
 
         <div class="bg-[#050505] border-2 border-[#191919] p-4 text-right w-full md:w-auto min-w-[220px]">
           <div id="liveClock" class="font-space text-2xl font-extrabold text-[#FFD994] tracking-wider">00:00:00 WIB</div>
-          <div id="liveDate" class="text-[10px] font-bold text-white uppercase tracking-widest mt-1">Senin, 19 Oktober 2026</div>
+          <div id="liveDate" class="text-[10px] font-bold text-white uppercase tracking-widest mt-1">Selasa, 27 Oktober 2026</div>
         </div>
       </section>
 
@@ -378,14 +378,15 @@
         </div>
       </section>
 
-      <!-- HRD ADMINISTRATOR CONSOLE -->
+      <!-- OPTIMALISASI HRD ADMINISTRATOR CONSOLE -->
       <section id="hrdPanel" class="hidden space-y-6">
-        <div class="bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-4">
+        <div class="bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-6">
           
+          <!-- TOP BANNER & RESET PERMISSION -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b-2 border-[#191919] gap-4">
             <div>
-              <span class="text-[9px] font-bold text-[#FF4B18] uppercase tracking-widest">HR Management Console</span>
-              <h3 class="font-space font-extrabold text-[#151515] text-lg uppercase mt-0.5">Audit & Rekapitulasi Presensi Tim</h3>
+              <span class="text-[9px] font-bold text-[#FF4B18] uppercase tracking-widest">HR Management Console v2.0</span>
+              <h3 class="font-space font-extrabold text-[#151515] text-lg uppercase mt-0.5">Pusat Kendali & Rekapitulasi Presensi HRD</h3>
             </div>
 
             <form onsubmit="handleGrantResetPermission(event)" class="flex items-center gap-2 w-full sm:w-auto">
@@ -404,52 +405,115 @@
             </form>
           </div>
 
+          <!-- HRD TAB NAVIGATOR -->
           <div class="flex items-center justify-between flex-wrap gap-3">
             <div class="flex bg-[#050505] p-1 border border-[#191919] text-xs font-bold">
               <button id="btnHrdTabHarian" type="button" onclick="switchHrdTab('harian')" class="px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider">
-                Log Harian Keseluruhan
+                1. Log Presensi Hari Ini (Real-time)
               </button>
               <button id="btnHrdTabBulanan" type="button" onclick="switchHrdTab('bulanan')" class="px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider">
-                Rekapitulasi Bulanan
+                2. Rekapitulasi & Kalender Bulanan
+              </button>
+              <button id="btnHrdTabLembur" type="button" onclick="switchHrdTab('lembur')" class="px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider">
+                3. Audit & Rekap Lembur
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 1: LOG HARI INI (REALTIME) + FILTER TANGGAL KHUSUS -->
+          <div id="hrdHarianContainer" class="space-y-4">
+            <div class="bg-white p-4 border-2 border-[#191919] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[3px_3px_0px_0px_#191919]">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="calendar" class="w-5 h-5 text-[#FF4B18]"></i>
+                <div>
+                  <h4 class="font-space font-extrabold text-xs uppercase">Filter Tanggal Log Presensi</h4>
+                  <p class="text-[10px] text-slate-500 font-semibold">Default menampilkan data hari ini secara otomatis (otomatis refresh).</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2 w-full md:w-auto">
+                <input type="date" id="hrdFilterTanggalLog" onchange="loadHrdLogByDate()" class="bg-[#F5F4F0] border-2 border-[#191919] px-3 py-1.5 text-xs font-bold text-[#151515] focus:outline-none">
+                <button type="button" onclick="resetFilterTanggalHariIni()" class="bg-[#191919] hover:bg-[#FF4B18] text-white text-xs font-bold px-3 py-2 uppercase tracking-wider transition">Hari Ini</button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto border-2 border-[#191919]">
+              <table class="w-full text-xs text-left bg-white">
+                <thead>
+                  <tr class="bg-[#050505] text-white font-space border-b-2 border-[#191919] uppercase text-[10px] tracking-wider">
+                    <th class="p-3">Waktu Log</th>
+                    <th class="p-3">Karyawan</th>
+                    <th class="p-3">Jenis</th>
+                    <th class="p-3">Status / Ubah Status HRD</th>
+                    <th class="p-3">Laporan Pekerjaan</th>
+                    <th class="p-3 text-center">Foto / Dokumen</th>
+                  </tr>
+                </thead>
+                <tbody id="hrdLogTableBody" class="divide-y divide-[#191919]"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 2: REKAPITULASI & KALENDER BULANAN HRD -->
+          <div id="hrdBulananContainer" class="space-y-4 hidden">
+            <div class="bg-white p-4 border-2 border-[#191919] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[3px_3px_0px_0px_#191919]">
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-1.5">
+                  <button type="button" onclick="ubahBulanHrd(-1)" class="px-2.5 py-1 bg-[#191919] text-white font-bold hover:bg-[#FF4B18]">‹</button>
+                  <span id="labelBulanHrd" class="font-space font-extrabold text-xs uppercase px-2">Bulan Ini</span>
+                  <button type="button" onclick="ubahBulanHrd(1)" class="px-2.5 py-1 bg-[#191919] text-white font-bold hover:bg-[#FF4B18]">›</button>
+                </div>
+              </div>
+
+              <button type="button" onclick="exportRekapBulananExcel()" class="bg-[#191919] hover:bg-emerald-700 text-white font-space font-extrabold text-xs px-4 py-2.5 uppercase tracking-wider transition flex items-center space-x-2">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i>
+                <span>Download Rekap Bulanan (.xlsx)</span>
               </button>
             </div>
 
-            <button type="button" onclick="exportToExcel()" class="bg-[#191919] hover:bg-emerald-700 text-white font-space font-extrabold text-xs px-4 py-2.5 uppercase tracking-wider transition flex items-center space-x-2">
-              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i>
-              <span>Download Rekap Excel (.xlsx)</span>
-            </button>
+            <!-- Kalender Mini HRD Overview -->
+            <div class="bg-white border-2 border-[#191919] p-4 shadow-[3px_3px_0px_0px_#191919]">
+              <h4 class="font-space font-extrabold text-xs uppercase text-[#151515] mb-2">Pilih Tanggal Kalender Untuk Audit Log Tertentu</h4>
+              <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-white bg-[#050505] p-1.5 border border-[#191919]">
+                <div class="text-red-400">Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+              </div>
+              <div id="gridKalenderHrd" class="grid grid-cols-7 gap-1 mt-1"></div>
+            </div>
+
+            <!-- Tabel Aggregasi Bulanan -->
+            <div class="overflow-x-auto border-2 border-[#191919]">
+              <table class="w-full text-xs text-left bg-white">
+                <thead>
+                  <tr class="bg-[#050505] text-white font-space border-b-2 border-[#191919] uppercase text-[10px] tracking-wider">
+                    <th class="p-3">Nama Karyawan</th>
+                    <th class="p-3 text-center">Tepat Waktu</th>
+                    <th class="p-3 text-center">Terlambat</th>
+                    <th class="p-3 text-center">Sakit</th>
+                    <th class="p-3 text-center">Izin / Cuti</th>
+                    <th class="p-3 text-center">Total Masuk Tercatat</th>
+                  </tr>
+                </thead>
+                <tbody id="hrdMonthlyTableBody" class="divide-y divide-[#191919]"></tbody>
+              </table>
+            </div>
           </div>
 
-          <div id="hrdHarianContainer" class="overflow-x-auto border-2 border-[#191919]">
-            <table class="w-full text-xs text-left bg-white">
-              <thead>
-                <tr class="bg-[#050505] text-white font-space border-b-2 border-[#191919] uppercase text-[10px] tracking-wider">
-                  <th class="p-3">Waktu</th>
-                  <th class="p-3">Karyawan</th>
-                  <th class="p-3">Jenis</th>
-                  <th class="p-3">Status / Ubah Status</th>
-                  <th class="p-3">Laporan Pekerjaan</th>
-                  <th class="p-3 text-center">Foto / Dokumen</th>
-                </tr>
-              </thead>
-              <tbody id="hrdLogTableBody" class="divide-y divide-[#191919]"></tbody>
-            </table>
-          </div>
+          <!-- TAB 3: AUDIT & EXPORT REKAP LEMBUR -->
+          <div id="hrdLemburContainer" class="space-y-4 hidden">
+            <div class="bg-white p-4 border-2 border-[#191919] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[3px_3px_0px_0px_#191919]">
+              <div>
+                <h4 class="font-space font-extrabold text-xs uppercase">Data Pengajuan Lembur Karyawan</h4>
+                <p class="text-[10px] text-slate-500 font-semibold mt-0.5">Audit pengajuan jam dan rincian pekerjaan lembur seluruh staf.</p>
+              </div>
 
-          <div id="hrdBulananContainer" class="overflow-x-auto border-2 border-[#191919] hidden">
-            <table class="w-full text-xs text-left bg-white">
-              <thead>
-                <tr class="bg-[#050505] text-white font-space border-b-2 border-[#191919] uppercase text-[10px] tracking-wider">
-                  <th class="p-3">Nama Karyawan</th>
-                  <th class="p-3 text-center">Tepat Waktu</th>
-                  <th class="p-3 text-center">Terlambat</th>
-                  <th class="p-3 text-center">Sakit</th>
-                  <th class="p-3 text-center">Izin / Cuti</th>
-                  <th class="p-3 text-center">Total Masuk Tercatat</th>
-                </tr>
-              </thead>
-              <tbody id="hrdMonthlyTableBody" class="divide-y divide-[#191919]"></tbody>
-            </table>
+              <button type="button" onclick="exportLemburExcel()" class="bg-[#191919] hover:bg-emerald-700 text-white font-space font-extrabold text-xs px-4 py-2.5 uppercase tracking-wider transition flex items-center space-x-2">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i>
+                <span>Download Rekap Lembur (.xlsx)</span>
+              </button>
+            </div>
+
+            <div id="hrdListLemburGlobal" class="space-y-3">
+              <!-- Log Lembur Render Here -->
+            </div>
           </div>
 
         </div>
@@ -496,12 +560,19 @@
     let currentUserState = null;
     let activeCameraStream = null;
     let todayLogCache = { masuk: null, pulang: null };
-    let globalLogsCache = [];
     let uploadedFileBase64 = null;
     
-    // Variabel Kalender Histori
+    // Variabel HRD Engine & Cache
+    let hrdFilterTanggal = new Date().toISOString().split('T')[0];
+    let hrdBulanAktif = new Date().getMonth();
+    let hrdTahunAktif = new Date().getFullYear();
+    let cacheLogsBulanHrd = [];
+    let cacheLemburHrd = [];
+    let unsubscribeHrdLog = null;
+
+    // Variabel Kalender Histori Karyawan
     let kalenderTahunAktif = new Date().getFullYear();
-    let kalenderBulanAktif = new Date().getMonth(); // 0-11
+    let kalenderBulanAktif = new Date().getMonth();
     let cacheHistoriPribadi = [];
 
     const HRD_PASSWORD_SECRET = '12345asdfg';
@@ -511,6 +582,7 @@
       lucide.createIcons();
       initLiveClock();
       document.getElementById('lemburTanggal').valueAsDate = new Date();
+      document.getElementById('hrdFilterTanggalLog').value = hrdFilterTanggal;
       tambahBarisLembur();
     });
 
@@ -663,7 +735,7 @@
         document.getElementById('viewKaryawanKalender').classList.add('hidden');
         document.getElementById('viewKaryawanLembur').classList.add('hidden');
         document.getElementById('hrdPanel').classList.remove('hidden');
-        subscribeRealtimeHrdLogs();
+        switchHrdTab('harian');
       } else {
         document.getElementById('karyawanNavSection').classList.remove('hidden');
         document.getElementById('hrdPanel').classList.add('hidden');
@@ -695,30 +767,338 @@
       if (view === 'lembur') loadRiwayatLembur();
     }
 
+    // --- ENGINE DASHBOARD HRD TEROPTIMALISASI ---
     function switchHrdTab(tab) {
       const btnHarian = document.getElementById('btnHrdTabHarian');
       const btnBulanan = document.getElementById('btnHrdTabBulanan');
+      const btnLembur = document.getElementById('btnHrdTabLembur');
+
       const containerHarian = document.getElementById('hrdHarianContainer');
       const containerBulanan = document.getElementById('hrdBulananContainer');
+      const containerLembur = document.getElementById('hrdLemburContainer');
+
+      btnHarian.className = "px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider";
+      btnBulanan.className = "px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider";
+      btnLembur.className = "px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider";
+
+      containerHarian.classList.add('hidden');
+      containerBulanan.classList.add('hidden');
+      containerLembur.classList.add('hidden');
 
       if (tab === 'harian') {
         btnHarian.className = "px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider";
-        btnBulanan.className = "px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider";
         containerHarian.classList.remove('hidden');
-        containerBulanan.classList.add('hidden');
-      } else {
+        resetFilterTanggalHariIni();
+      } else if (tab === 'bulanan') {
         btnBulanan.className = "px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider";
-        btnHarian.className = "px-4 py-2 text-slate-400 hover:text-white font-space uppercase tracking-wider";
         containerBulanan.classList.remove('hidden');
-        containerHarian.classList.add('hidden');
-        renderMonthlySummary();
+        initHrdRekapBulanan();
+      } else if (tab === 'lembur') {
+        btnLembur.className = "px-4 py-2 bg-[#FF4B18] text-white font-space uppercase tracking-wider";
+        containerLembur.classList.remove('hidden');
+        loadHrdLemburGlobal();
       }
+    }
+
+    function resetFilterTanggalHariIni() {
+      hrdFilterTanggal = new Date().toISOString().split('T')[0];
+      document.getElementById('hrdFilterTanggalLog').value = hrdFilterTanggal;
+      loadHrdLogByDate();
+    }
+
+    function loadHrdLogByDate() {
+      hrdFilterTanggal = document.getElementById('hrdFilterTanggalLog').value;
+      if (!hrdFilterTanggal) return;
+
+      if (unsubscribeHrdLog) unsubscribeHrdLog();
+
+      unsubscribeHrdLog = db.collection('absen_logs')
+        .where('dateKey', '==', hrdFilterTanggal)
+        .onSnapshot((snapshot) => {
+          const tbody = document.getElementById('hrdLogTableBody');
+          tbody.innerHTML = '';
+
+          if (snapshot.empty) {
+            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 font-bold uppercase">Tidak ada catatan presensi pada tanggal (${hrdFilterTanggal}).</td></tr>`;
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const log = { id: doc.id, ...doc.data() };
+            let statusDropdown = `
+              <select onchange="updateLogStatus('${log.id}', this.value)" class="bg-[#F5F4F0] border border-[#191919] px-2 py-1 text-[11px] font-bold text-[#151515] focus:outline-none">
+                <option value="Tepat Waktu" ${log.status === 'Tepat Waktu' ? 'selected' : ''}>Tepat Waktu</option>
+                <option value="Terlambat" ${log.status === 'Terlambat' ? 'selected' : ''}>Terlambat</option>
+                <option value="Sakit" ${log.status === 'Sakit' ? 'selected' : ''}>Sakit</option>
+                <option value="Izin" ${log.status === 'Izin' ? 'selected' : ''}>Izin</option>
+                <option value="Cuti" ${log.status === 'Cuti' ? 'selected' : ''}>Cuti</option>
+                <option value="Pulang" ${log.status === 'Pulang' ? 'selected' : ''}>Pulang</option>
+              </select>
+            `;
+
+            let fileBtnText = log.isDocument ? 'Lihat Dokumen' : 'Lihat Foto';
+
+            tbody.innerHTML += `
+              <tr class="hover:bg-slate-50 border-b border-[#191919]">
+                <td class="p-3 font-mono font-bold text-slate-600">${log.time || '-'}</td>
+                <td class="p-3 font-space font-extrabold text-[#151515] uppercase">${log.userName}</td>
+                <td class="p-3 font-bold ${log.type === 'MASUK' ? 'text-[#FF4B18]' : 'text-slate-800'}">${log.type}</td>
+                <td class="p-3">${statusDropdown}</td>
+                <td class="p-3 text-slate-700 font-semibold max-w-xs truncate">${log.laporan}</td>
+                <td class="p-3 text-center">
+                  <button type="button" onclick="openModalFoto('${log.photo}', ${log.isDocument || false})" class="text-[#FF4B18] font-bold hover:underline flex items-center justify-center space-x-1 mx-auto text-[11px]">
+                    <i data-lucide="${log.isDocument ? 'file-text' : 'image'}" class="w-3.5 h-3.5"></i><span>${fileBtnText}</span>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+          lucide.createIcons();
+        });
+    }
+
+    async function initHrdRekapBulanan() {
+      const namaBulanArr = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      document.getElementById('labelBulanHrd').innerText = `${namaBulanArr[hrdBulanAktif]} ${hrdTahunAktif}`;
+
+      try {
+        const snapshot = await db.collection('absen_logs').get();
+        cacheLogsBulanHrd = [];
+        snapshot.forEach(doc => cacheLogsBulanHrd.push(doc.data()));
+
+        renderGridKalenderHrd();
+        renderTableBulananHrd();
+      } catch (err) {
+        console.error('Error load rekap bulanan HRD:', err);
+      }
+    }
+
+    function ubahBulanHrd(dir) {
+      hrdBulanAktif += dir;
+      if (hrdBulanAktif > 11) {
+        hrdBulanAktif = 0;
+        hrdTahunAktif++;
+      } else if (hrdBulanAktif < 0) {
+        hrdBulanAktif = 11;
+        hrdTahunAktif--;
+      }
+      initHrdRekapBulanan();
+    }
+
+    function renderGridKalenderHrd() {
+      const grid = document.getElementById('gridKalenderHrd');
+      grid.innerHTML = '';
+
+      const hariPertama = new Date(hrdTahunAktif, hrdBulanAktif, 1).getDay();
+      const jumlahHari = new Date(hrdTahunAktif, hrdBulanAktif + 1, 0).getDate();
+
+      for (let i = 0; i < hariPertama; i++) {
+        grid.innerHTML += `<div class="bg-slate-100 opacity-40 h-9 border border-slate-200"></div>`;
+      }
+
+      for (let d = 1; d <= jumlahHari; d++) {
+        const mm = String(hrdBulanAktif + 1).padStart(2, '0');
+        const dd = String(d).padStart(2, '0');
+        const dateKeyStr = `${hrdTahunAktif}-${mm}-${dd}`;
+
+        grid.innerHTML += `
+          <button type="button" onclick="pilihTanggalDariKalenderHrd('${dateKeyStr}')" class="h-9 bg-white border border-[#191919] font-space font-bold text-xs text-[#151515] hover:bg-[#FF4B18] hover:text-white transition flex items-center justify-center">
+            ${d}
+          </button>
+        `;
+      }
+    }
+
+    function pilihTanggalDariKalenderHrd(dateKey) {
+      document.getElementById('hrdFilterTanggalLog').value = dateKey;
+      switchHrdTab('harian');
+    }
+
+    function renderTableBulananHrd() {
+      const tbody = document.getElementById('hrdMonthlyTableBody');
+      tbody.innerHTML = '';
+
+      const summary = {};
+      TEAM_MEMBERS.forEach(m => { summary[m] = { tepatWaktu: 0, terlambat: 0, sakit: 0, izinCuti: 0, totalMasuk: 0 }; });
+
+      cacheLogsBulanHrd.forEach(log => {
+        if (log.dateKey && summary[log.userName]) {
+          const logDate = new Date(log.dateKey);
+          if (logDate.getMonth() === hrdBulanAktif && logDate.getFullYear() === hrdTahunAktif) {
+            if (log.type === 'MASUK') {
+              summary[log.userName].totalMasuk++;
+              if (log.status === 'Tepat Waktu' || log.status === 'Masuk') summary[log.userName].tepatWaktu++;
+              else if (log.status === 'Terlambat') summary[log.userName].terlambat++;
+              else if (log.status === 'Sakit') summary[log.userName].sakit++;
+              else if (log.status === 'Izin' || log.status === 'Cuti') summary[log.userName].izinCuti++;
+            }
+          }
+        }
+      });
+
+      TEAM_MEMBERS.forEach(m => {
+        const s = summary[m];
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 border-b border-[#191919]">
+            <td class="p-3 font-space font-extrabold text-[#151515] uppercase">${m}</td>
+            <td class="p-3 text-center text-emerald-700 font-bold">${s.tepatWaktu} Hari</td>
+            <td class="p-3 text-center text-[#FF4B18] font-bold">${s.terlambat} Hari</td>
+            <td class="p-3 text-center text-purple-700 font-bold">${s.sakit} Hari</td>
+            <td class="p-3 text-center text-blue-700 font-bold">${s.izinCuti} Hari</td>
+            <td class="p-3 text-center font-mono font-bold">${s.totalMasuk} Hari</td>
+          </tr>
+        `;
+      });
+    }
+
+    // --- EXPORT REKAP BULANAN EXCEL RAPI & MEWAH ---
+    function exportRekapBulananExcel() {
+      const namaBulanArr = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      const bulanNama = namaBulanArr[hrdBulanAktif];
+
+      const summary = {};
+      TEAM_MEMBERS.forEach(m => { summary[m] = { tepatWaktu: 0, terlambat: 0, sakit: 0, izinCuti: 0, totalMasuk: 0 }; });
+
+      cacheLogsBulanHrd.forEach(log => {
+        if (log.dateKey && summary[log.userName]) {
+          const logDate = new Date(log.dateKey);
+          if (logDate.getMonth() === hrdBulanAktif && logDate.getFullYear() === hrdTahunAktif) {
+            if (log.type === 'MASUK') {
+              summary[log.userName].totalMasuk++;
+              if (log.status === 'Tepat Waktu' || log.status === 'Masuk') summary[log.userName].tepatWaktu++;
+              else if (log.status === 'Terlambat') summary[log.userName].terlambat++;
+              else if (log.status === 'Sakit') summary[log.userName].sakit++;
+              else if (log.status === 'Izin' || log.status === 'Cuti') summary[log.userName].izinCuti++;
+            }
+          }
+        }
+      });
+
+      const excelRows = [
+        ['YAYASAN PENDIDIKAN TELKOM (YPT)'],
+        [`REKAPITULASI PRESENSI KARYAWAN — PERIODE ${bulanNama.toUpperCase()} ${hrdTahunAktif}`],
+        [],
+        ['No', 'Nama Karyawan', 'Tepat Waktu (Hari)', 'Terlambat (Hari)', 'Sakit (Hari)', 'Izin / Cuti (Hari)', 'Total Kehadiran (Hari)']
+      ];
+
+      let totalTepat = 0, totalLambat = 0, totalSakit = 0, totalIzin = 0, totalAkumulasi = 0;
+
+      TEAM_MEMBERS.forEach((m, idx) => {
+        const s = summary[m];
+        totalTepat += s.tepatWaktu;
+        totalLambat += s.terlambat;
+        totalSakit += s.sakit;
+        totalIzin += s.izinCuti;
+        totalAkumulasi += s.totalMasuk;
+
+        excelRows.push([
+          idx + 1,
+          m,
+          s.tepatWaktu,
+          s.terlambat,
+          s.sakit,
+          s.izinCuti,
+          s.totalMasuk
+        ]);
+      });
+
+      excelRows.push([]);
+      excelRows.push(['GRAND TOTAL', '', totalTepat, totalLambat, totalSakit, totalIzin, totalAkumulasi]);
+
+      const ws = XLSX.utils.aoa_to_sheet(excelRows);
+      ws['!cols'] = [{ wch: 6 }, { wch: 22 }, { wch: 20 }, { wch: 18 }, { wch: 15 }, { wch: 18 }, { wch: 24 }];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Rekap Bulanan");
+      XLSX.writeFile(wb, `Rekap_Presensi_YPT_${bulanNama}_${hrdTahunAktif}.xlsx`);
+    }
+
+    // --- AUDIT & EXPORT LEMBUR HRD ---
+    async function loadHrdLemburGlobal() {
+      const container = document.getElementById('hrdListLemburGlobal');
+      container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Memuat data lembur tim...</p>';
+
+      try {
+        const snapshot = await db.collection('lembur_logs').get();
+        cacheLemburHrd = [];
+        snapshot.forEach(doc => cacheLemburHrd.push(doc.data()));
+
+        if (cacheLemburHrd.length === 0) {
+          container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Belum ada data lembur tercatat.</p>';
+          return;
+        }
+
+        cacheLemburHrd.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+        container.innerHTML = '';
+        cacheLemburHrd.forEach(d => {
+          let rincianHTML = '';
+          if (d.rincian && Array.isArray(d.rincian)) {
+            d.rincian.forEach((r, idx) => {
+              rincianHTML += `
+                <div class="text-[11px] text-slate-700 mt-1 pl-2 border-l-2 border-[#FF4B18]">
+                  <strong>Sesi #${idx+1} (${r.mulai} s/d ${r.selesai}):</strong> ${r.deskripsi}
+                </div>
+              `;
+            });
+          }
+
+          container.innerHTML += `
+            <div class="p-4 bg-white border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919]">
+              <div class="flex items-center justify-between border-b border-[#191919] pb-2 mb-2">
+                <span class="font-space font-extrabold text-xs text-[#151515] uppercase">${d.userName}</span>
+                <span class="text-[10px] font-mono bg-[#050505] text-[#FFD994] px-2.5 py-1 font-bold">Tanggal: ${d.tanggal}</span>
+              </div>
+              ${rincianHTML}
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error("Error load lembur HRD:", err);
+      }
+    }
+
+    // --- EXPORT REKAP LEMBUR EXCEL RAPI ---
+    function exportLemburExcel() {
+      if (cacheLemburHrd.length === 0) return alert('Tidak ada data lembur untuk di-export.');
+
+      const excelRows = [
+        ['YAYASAN PENDIDIKAN TELKOM (YPT)'],
+        ['LAPORAN REKAPITULASI PENGAJUAN LEMBUR KARYAWAN'],
+        [],
+        ['No', 'Tanggal Lembur', 'Nama Karyawan', 'Sesi Ke-', 'Jam Mulai', 'Jam Selesai', 'Uraian / Deskripsi Pekerjaan Lembur']
+      ];
+
+      let rowNum = 1;
+      cacheLemburHrd.forEach(d => {
+        if (d.rincian && Array.isArray(d.rincian)) {
+          d.rincian.forEach((r, idx) => {
+            excelRows.push([
+              rowNum++,
+              d.tanggal,
+              d.userName,
+              `Sesi #${idx + 1}`,
+              r.mulai,
+              r.selesai,
+              r.deskripsi
+            ]);
+          });
+        }
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(excelRows);
+      ws['!cols'] = [{ wch: 6 }, { wch: 16 }, { wch: 22 }, { wch: 10 }, { wch: 14 }, { wch: 14 }, { wch: 50 }];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Rekap Lembur");
+      XLSX.writeFile(wb, `Rekap_Lembur_YPT_${new Date().toISOString().split('T')[0]}.xlsx`);
     }
 
     function handleLogout() {
       stopCamera();
       currentUserState = null;
       uploadedFileBase64 = null;
+      if (unsubscribeHrdLog) unsubscribeHrdLog();
       document.getElementById('loginSection').classList.remove('hidden');
       document.getElementById('dashboardSection').classList.add('hidden');
       document.getElementById('userInfoHeader').classList.add('hidden');
@@ -898,7 +1278,7 @@
       });
     }
 
-    // --- MENU 3: KALENDER BULANAN HISTORI ---
+    // --- MENU KALENDER BULANAN KARYAWAN ---
     async function initKalenderBulanan() {
       const namaBulanArr = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       document.getElementById('labelBulanAktif').innerText = `${namaBulanArr[kalenderBulanAktif]} ${kalenderTahunAktif}`;
@@ -917,7 +1297,6 @@
         renderGridKalender(kalenderTahunAktif, kalenderBulanAktif);
       } catch (err) {
         console.error('Error load kalender:', err);
-        grid.innerHTML = '<div class="col-span-7 text-center py-4 text-xs font-bold text-red-600">Gagal memuat data kalender.</div>';
       }
     }
 
@@ -1010,7 +1389,7 @@
       content.innerHTML = html;
     }
 
-    // --- MENU 4: FORM LEMBUR MULTI-ENTRY ---
+    // --- FORM LEMBUR KARYAWAN ---
     function tambahBarisLembur() {
       const list = document.getElementById('listBarisLembur');
       const index = list.children.length + 1;
@@ -1111,56 +1490,7 @@
         });
       } catch (err) {
         console.error("Error load lembur:", err);
-        container.innerHTML = '<p class="text-xs text-red-600 font-bold uppercase">Gagal memuat riwayat lembur.</p>';
       }
-    }
-
-    function subscribeRealtimeHrdLogs() {
-      db.collection('absen_logs').orderBy('createdAt', 'desc')
-        .onSnapshot((snapshot) => {
-          globalLogsCache = [];
-          const tbody = document.getElementById('hrdLogTableBody');
-          tbody.innerHTML = '';
-          
-          if (snapshot.empty) {
-            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400 font-bold uppercase">Belum ada data presensi.</td></tr>`;
-            return;
-          }
-
-          snapshot.forEach((doc) => {
-            const log = { id: doc.id, ...doc.data() };
-            globalLogsCache.push(log);
-
-            let statusDropdown = `
-              <select onchange="updateLogStatus('${log.id}', this.value)" class="bg-[#F5F4F0] border border-[#191919] px-2 py-1 text-[11px] font-bold text-[#151515] focus:outline-none">
-                <option value="Tepat Waktu" ${log.status === 'Tepat Waktu' ? 'selected' : ''}>Tepat Waktu</option>
-                <option value="Terlambat" ${log.status === 'Terlambat' ? 'selected' : ''}>Terlambat</option>
-                <option value="Sakit" ${log.status === 'Sakit' ? 'selected' : ''}>Sakit</option>
-                <option value="Izin" ${log.status === 'Izin' ? 'selected' : ''}>Izin</option>
-                <option value="Cuti" ${log.status === 'Cuti' ? 'selected' : ''}>Cuti</option>
-                <option value="Pulang" ${log.status === 'Pulang' ? 'selected' : ''}>Pulang</option>
-              </select>
-            `;
-
-            let fileBtnText = log.isDocument ? 'Lihat Dokumen' : 'Lihat Foto';
-
-            tbody.innerHTML += `
-              <tr class="hover:bg-slate-50 border-b border-[#191919]">
-                <td class="p-3 font-mono font-bold text-slate-600">${log.time || '-'}</td>
-                <td class="p-3 font-space font-extrabold text-[#151515] uppercase">${log.userName}</td>
-                <td class="p-3 font-bold ${log.type === 'MASUK' ? 'text-[#FF4B18]' : 'text-slate-800'}">${log.type}</td>
-                <td class="p-3">${statusDropdown}</td>
-                <td class="p-3 text-slate-700 font-semibold max-w-xs truncate">${log.laporan}</td>
-                <td class="p-3 text-center">
-                  <button type="button" onclick="openModalFoto('${log.photo}', ${log.isDocument || false})" class="text-[#FF4B18] font-bold hover:underline flex items-center justify-center space-x-1 mx-auto text-[11px]">
-                    <i data-lucide="${log.isDocument ? 'file-text' : 'image'}" class="w-3.5 h-3.5"></i><span>${fileBtnText}</span>
-                  </button>
-                </td>
-              </tr>
-            `;
-          });
-          lucide.createIcons();
-        });
     }
 
     async function updateLogStatus(logId, newStatus) {
@@ -1170,51 +1500,6 @@
       } catch (err) {
         alert('Gagal mengubah status: ' + err.message);
       }
-    }
-
-    function renderMonthlySummary() {
-      const tbody = document.getElementById('hrdMonthlyTableBody');
-      tbody.innerHTML = '';
-
-      const summary = {};
-      TEAM_MEMBERS.forEach(m => { summary[m] = { tepatWaktu: 0, terlambat: 0, sakit: 0, izinCuti: 0, totalMasuk: 0 }; });
-
-      globalLogsCache.forEach(log => {
-        if (summary[log.userName]) {
-          if (log.type === 'MASUK') {
-            summary[log.userName].totalMasuk++;
-            if (log.status === 'Tepat Waktu' || log.status === 'Masuk') summary[log.userName].tepatWaktu++;
-            else if (log.status === 'Terlambat') summary[log.userName].terlambat++;
-            else if (log.status === 'Sakit') summary[log.userName].sakit++;
-            else if (log.status === 'Izin' || log.status === 'Cuti') summary[log.userName].izinCuti++;
-          }
-        }
-      });
-
-      TEAM_MEMBERS.forEach(m => {
-        const s = summary[m];
-        tbody.innerHTML += `
-          <tr class="hover:bg-slate-50 border-b border-[#191919]">
-            <td class="p-3 font-space font-extrabold text-[#151515] uppercase">${m}</td>
-            <td class="p-3 text-center text-emerald-700 font-bold">${s.tepatWaktu}</td>
-            <td class="p-3 text-center text-[#FF4B18] font-bold">${s.terlambat}</td>
-            <td class="p-3 text-center text-purple-700 font-bold">${s.sakit}</td>
-            <td class="p-3 text-center text-blue-700 font-bold">${s.izinCuti}</td>
-            <td class="p-3 text-center font-mono font-bold">${s.totalMasuk}</td>
-          </tr>
-        `;
-      });
-    }
-
-    function exportToExcel() {
-      if (globalLogsCache.length === 0) return alert('Tidak ada data presensi untuk di-export.');
-      const dataToExport = globalLogsCache.map(l => ({
-        Waktu: l.time, Karyawan: l.userName, Tipe: l.type, Status: l.status, 'Laporan Tugas': l.laporan, Tanggal: l.dateKey
-      }));
-      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Presensi YPT");
-      XLSX.writeFile(workbook, "Rekap_Presensi_YPT.xlsx");
     }
 
     async function handleGrantResetPermission(e) {
