@@ -81,7 +81,6 @@
         <p class="text-xs text-[#6E6E6E] mt-1">Pilih nama akun dan masukkan PIN 4 angka Anda</p>
       </div>
 
-      <!-- Mode Switcher -->
       <div class="grid grid-cols-2 bg-[#050505] p-1 border border-[#191919] mb-6 text-xs font-bold">
         <button id="btnTabKaryawan" onclick="switchLoginMode('karyawan')" class="py-2.5 bg-[#FF4B18] text-white transition font-space uppercase tracking-wider">
           Karyawan
@@ -181,7 +180,6 @@
 
       <!-- KARYAWAN VIEW 1: ABSENSI -->
       <section id="viewKaryawanAbsen" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- ABSEN MASUK -->
         <div class="bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-[#191919]">
@@ -244,7 +242,6 @@
           </div>
         </div>
 
-        <!-- ABSEN PULANG -->
         <div class="bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-[#191919]">
@@ -300,23 +297,50 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="gridDaftarHadirTim"></div>
       </section>
 
-      <!-- KARYAWAN VIEW 3: KALENDER HISTORI -->
+      <!-- KARYAWAN VIEW 3: KALENDER BULANAN HISTORI -->
       <section id="viewKaryawanKalender" class="hidden bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b-2 border-[#191919]">
-          <h3 class="font-space font-extrabold text-[#151515] text-base uppercase">Kalender & Histori Kehadiran Saya</h3>
-          <span class="text-[9px] bg-[#FF4B18] text-white px-3 py-1 font-bold uppercase tracking-wider">Rekap Riwayat Harian</span>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b-2 border-[#191919] gap-3">
+          <div>
+            <h3 class="font-space font-extrabold text-[#151515] text-base uppercase">Kalender Kehadiran Bulanan</h3>
+            <p class="text-[10px] text-slate-600 mt-0.5">Tracking data waktu absen masuk dan keluar harian Anda.</p>
+          </div>
+          <!-- Kontrol Bulan -->
+          <div class="flex items-center space-x-2">
+            <button onclick="ubahBulanKalender(-1)" class="px-3 py-1.5 bg-[#191919] text-white text-xs font-bold hover:bg-[#FF4B18] transition">‹ Prev</button>
+            <span id="labelBulanAktif" class="font-space font-extrabold text-xs uppercase px-2">Bulan Ini</span>
+            <button onclick="ubahBulanKalender(1)" class="px-3 py-1.5 bg-[#191919] text-white text-xs font-bold hover:bg-[#FF4B18] transition">Next ›</button>
+          </div>
         </div>
-        <div id="containerHistoriKalender" class="space-y-3">
-          <!-- Histori dimuat via JS -->
+
+        <!-- Grid Kalender Bulanan -->
+        <div class="grid grid-cols-7 gap-1.5 text-center text-xs font-bold text-white bg-[#050505] p-2 border-2 border-[#191919]">
+          <div class="py-1 text-red-400">Min</div>
+          <div class="py-1">Sen</div>
+          <div class="py-1">Sel</div>
+          <div class="py-1">Rab</div>
+          <div class="py-1">Kam</div>
+          <div class="py-1">Jum</div>
+          <div class="py-1">Sab</div>
+        </div>
+        <div id="gridKalenderBulanan" class="grid grid-cols-7 gap-1.5">
+          <!-- Render kotak tanggal via JS -->
+        </div>
+
+        <!-- Detail Modal / Kotak Informasi Tanggal Terpilih -->
+        <div id="detailHistoriTanggal" class="p-4 bg-white border-2 border-[#191919] mt-4 shadow-[4px_4px_0px_0px_#191919]">
+          <h4 class="font-space font-extrabold text-xs uppercase text-[#FF4B18]" id="detailTanggalTitle">Pilih tanggal pada kalender di atas untuk melihat detail</h4>
+          <div id="detailTanggalContent" class="text-xs text-slate-700 mt-2 space-y-1">
+            <p>-</p>
+          </div>
         </div>
       </section>
 
-      <!-- KARYAWAN VIEW 4: FORM LEMBUR (MULTI-ENTRY DENGAN TOMBOL + BULAT) -->
+      <!-- KARYAWAN VIEW 4: FORM LEMBUR MULTI-ENTRY -->
       <section id="viewKaryawanLembur" class="hidden bg-[#F5F4F0] border-2 border-[#191919] p-6 shadow-[6px_6px_0px_0px_#191919] space-y-4">
         <div class="flex items-center justify-between pb-3 border-b-2 border-[#191919]">
           <div>
             <h3 class="font-space font-extrabold text-[#151515] text-base uppercase">Form Pengajuan & Rincian Lembur</h3>
-            <p class="text-[10px] text-slate-600 mt-0.5">Anda dapat mengisi lembur beberapa kali dalam sebulan dengan menekan tombol (+) bulat di bawah.</p>
+            <p class="text-[10px] text-slate-600 mt-0.5">Tambah baris lembur menggunakan tombol (+) bulat di bawah untuk pengajuan berkali-kali.</p>
           </div>
           <span class="text-[9px] bg-[#191919] text-white px-3 py-1 font-bold uppercase tracking-wider">Multi-Entry Lembur</span>
         </div>
@@ -327,7 +351,6 @@
             <input type="date" id="lemburTanggal" class="w-full bg-white border-2 border-[#191919] p-2.5 text-xs font-bold text-[#151515] focus:outline-none" required>
           </div>
 
-          <!-- CONTAINER DAFTAR TUGAS LEMBUR DENGAN TOMBOL + -->
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <label class="block text-[10px] font-bold text-[#151515] uppercase tracking-widest">Rincian Jam & Pekerjaan Lembur</label>
@@ -338,7 +361,7 @@
             </div>
 
             <div id="listBarisLembur" class="space-y-3">
-              <!-- Baris dinamis ditambahkan disini -->
+              <!-- Baris dinamis -->
             </div>
           </div>
 
@@ -475,6 +498,12 @@
     let todayLogCache = { masuk: null, pulang: null };
     let globalLogsCache = [];
     let uploadedFileBase64 = null;
+    
+    // Variabel Kalender Histori
+    let kalenderTahunAktif = new Date().getFullYear();
+    let kalenderBulanAktif = new Date().getMonth(); // 0-11
+    let cacheHistoriPribadi = [];
+
     const HRD_PASSWORD_SECRET = '12345asdfg';
     const TEAM_MEMBERS = ['Galuh', 'Karyo', 'Amel', 'Zabar', 'Anam', 'Raksa'];
 
@@ -482,7 +511,7 @@
       lucide.createIcons();
       initLiveClock();
       document.getElementById('lemburTanggal').valueAsDate = new Date();
-      tambahBarisLembur(); // Inisialisasi baris pertama form lembur
+      tambahBarisLembur();
     });
 
     function initLiveClock() {
@@ -636,7 +665,6 @@
       }
     }
 
-    // NAVIGASI 4 MENU KARYAWAN
     function switchKaryawanView(view) {
       const views = ['absen', 'daftarHadir', 'kalender', 'lembur'];
       const btnIds = { absen: 'tabMenuAbsen', daftarHadir: 'tabMenuDaftarHadir', kalender: 'tabMenuKalender', lembur: 'tabMenuLembur' };
@@ -655,7 +683,7 @@
       });
 
       if (view === 'daftarHadir') loadDaftarHadirTim();
-      if (view === 'kalender') loadKalenderHistori();
+      if (view === 'kalender') initKalenderBulanan();
       if (view === 'lembur') loadRiwayatLembur();
     }
 
@@ -776,7 +804,8 @@
 
       const newLog = {
         dateKey: now.toISOString().split('T')[0],
-        time: now.toLocaleString('id-ID'),
+        time: now.toLocaleTimeString('id-ID'),
+        timestamp: now.getTime(),
         userName: currentUserState.name,
         type: 'MASUK',
         status: finalStatus,
@@ -802,7 +831,8 @@
       const now = new Date();
       const newLog = {
         dateKey: now.toISOString().split('T')[0],
-        time: now.toLocaleString('id-ID'),
+        time: now.toLocaleTimeString('id-ID'),
+        timestamp: now.getTime(),
         userName: currentUserState.name,
         type: 'PULANG',
         status: 'Pulang',
@@ -851,8 +881,8 @@
           <div class="p-4 border-2 border-[#191919] bg-white flex items-center justify-between shadow-[4px_4px_0px_0px_#191919]">
             <div>
               <h4 class="font-space font-extrabold text-[#151515] text-xs uppercase">${m}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mt-0.5">Masuk: ${status.masuk ? status.masuk.time.split(' ')[1] : '-'}</p>
-              <p class="text-[10px] text-slate-500 font-bold">Pulang: ${status.pulang ? status.pulang.time.split(' ')[1] : '-'}</p>
+              <p class="text-[10px] text-slate-500 font-bold mt-0.5">Masuk: ${status.masuk ? status.masuk.time : '-'}</p>
+              <p class="text-[10px] text-slate-500 font-bold">Pulang: ${status.pulang ? status.pulang.time : '-'}</p>
             </div>
             <div>${statusTag}</div>
           </div>
@@ -860,38 +890,122 @@
       });
     }
 
-    // MENU 3: KALENDER / HISTORI PRIBADI
-    async function loadKalenderHistori() {
-      const container = document.getElementById('containerHistoriKalender');
-      container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Memuat histori pribadi...</p>';
+    // --- MENU 3: KALENDER BULANAN HISTORI (PERBAIKAN UTAMA) ---
+    async function initKalenderBulanan() {
+      const namaBulanArr = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      document.getElementById('labelBulanAktif').innerText = `${namaBulanArr[kalenderBulanAktif]} ${kalenderTahunAktif}`;
+      
+      const grid = document.getElementById('gridKalenderBulanan');
+      grid.innerHTML = '<div class="col-span-7 text-center py-4 text-xs font-bold text-slate-600">Memuat kalender...</div>';
 
-      const snapshot = await db.collection('absen_logs')
-        .where('userName', '==', currentUserState.name)
-        .orderBy('createdAt', 'desc')
-        .get();
+      try {
+        const snapshot = await db.collection('absen_logs')
+          .where('userName', '==', currentUserState.name)
+          .get();
 
-      if (snapshot.empty) {
-        container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Belum ada riwayat kehadiran tercatat.</p>';
-        return;
+        cacheHistoriPribadi = [];
+        snapshot.forEach(doc => cacheHistoriPribadi.push(doc.data()));
+
+        renderGridKalender(kalenderTahunAktif, kalenderBulanAktif);
+      } catch (err) {
+        console.error('Error load kalender:', err);
+        grid.innerHTML = '<div class="col-span-7 text-center py-4 text-xs font-bold text-red-600">Gagal memuat data kalender.</div>';
+      }
+    }
+
+    function ubahBulanKalender(dir) {
+      kalenderBulanAktif += dir;
+      if (kalenderBulanAktif > 11) {
+        kalenderBulanAktif = 0;
+        kalenderTahunAktif++;
+      } else if (kalenderBulanAktif < 0) {
+        kalenderBulanAktif = 11;
+        kalenderTahunAktif--;
+      }
+      initKalenderBulanan();
+    }
+
+    function renderGridKalender(tahun, bulan) {
+      const grid = document.getElementById('gridKalenderBulanan');
+      grid.innerHTML = '';
+
+      const hariPertama = new Date(tahun, bulan, 1).getDay();
+      const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
+
+      // Mapping data absen user berdasarkan dateKey (YYYY-MM-DD)
+      const dataMap = {};
+      cacheHistoriPribadi.forEach(item => {
+        if (!dataMap[item.dateKey]) dataMap[item.dateKey] = { masuk: null, pulang: null };
+        if (item.type === 'MASUK') dataMap[item.dateKey].masuk = item;
+        if (item.type === 'PULANG') dataMap[item.dateKey].pulang = item;
+      });
+
+      // Render kotak kosong untuk offset hari pertama
+      for (let i = 0; i < hariPertama; i++) {
+        grid.innerHTML += `<div class="bg-slate-200/50 h-20 border border-slate-300 opacity-30"></div>`;
       }
 
-      container.innerHTML = '';
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        container.innerHTML += `
-          <div class="p-4 bg-white border-2 border-[#191919] flex items-center justify-between shadow-[4px_4px_0px_0px_#191919]">
+      // Render tanggal bulan aktif
+      for (let d = 1; d <= jumlahHari; d++) {
+        const mm = String(bulan + 1).padStart(2, '0');
+        const dd = String(d).padStart(2, '0');
+        const dateKeyStr = `${tahun}-${mm}-${dd}`;
+        const record = dataMap[dateKeyStr];
+
+        let bgBox = "bg-white hover:bg-slate-50";
+        let badgeStatus = "";
+
+        if (record && record.masuk) {
+          const st = record.masuk.status;
+          if (st === 'Tepat Waktu' || st === 'Masuk') {
+            bgBox = "bg-emerald-50 border-emerald-500";
+            badgeStatus = `<span class="block text-[8px] bg-emerald-600 text-white px-1 mt-0.5 font-bold uppercase">Hadir</span>`;
+          } else if (st === 'Terlambat') {
+            bgBox = "bg-amber-50 border-amber-500";
+            badgeStatus = `<span class="block text-[8px] bg-amber-600 text-white px-1 mt-0.5 font-bold uppercase">Terlambat</span>`;
+          } else {
+            bgBox = "bg-blue-50 border-blue-500";
+            badgeStatus = `<span class="block text-[8px] bg-blue-600 text-white px-1 mt-0.5 font-bold uppercase">${st}</span>`;
+          }
+        }
+
+        grid.innerHTML += `
+          <div onclick="tampilkanDetailTanggal('${dateKeyStr}')" class="${bgBox} h-20 border-2 border-[#191919] p-1.5 flex flex-col justify-between cursor-pointer transition text-left shadow-[2px_2px_0px_0px_#191919]">
+            <span class="font-space font-extrabold text-xs text-[#151515]">${d}</span>
             <div>
-              <span class="text-[10px] font-mono bg-[#050505] text-[#FFD994] px-2 py-0.5 font-bold">${d.dateKey}</span>
-              <h4 class="font-space font-extrabold text-sm text-[#151515] mt-1">${d.type} — ${d.status}</h4>
-              <p class="text-[11px] text-slate-600 mt-0.5">Waktu: ${d.time}</p>
-              ${d.laporan !== '-' ? `<p class="text-[11px] text-slate-700 italic mt-1">Laporan: "${d.laporan}"</p>` : ''}
+              ${badgeStatus}
+              ${record && record.pulang ? '<span class="block text-[7px] text-slate-500 font-bold">Pulang ✓</span>' : ''}
             </div>
           </div>
         `;
-      });
+      }
     }
 
-    // MENU 4: FORM LEMBUR DINAMIS (TOMBOL + BULAT)
+    function tampilkanDetailTanggal(dateKey) {
+      const title = document.getElementById('detailTanggalTitle');
+      const content = document.getElementById('detailTanggalContent');
+
+      title.innerText = `Detail Presensi Tanggal: ${dateKey}`;
+
+      const matched = cacheHistoriPribadi.filter(i => i.dateKey === dateKey);
+      if (matched.length === 0) {
+        content.innerHTML = `<p class="text-slate-500 font-bold">Tidak ada catatan presensi pada tanggal ini.</p>`;
+        return;
+      }
+
+      let html = '';
+      matched.forEach(m => {
+        html += `
+          <div class="p-2 bg-[#F5F4F0] border border-[#191919] mb-1">
+            <span class="font-bold text-[#FF4B18] uppercase">${m.type} (${m.status})</span> — <span class="font-mono">${m.time || '-'}</span>
+            ${m.laporan && m.laporan !== '-' ? `<p class="italic text-slate-600 mt-0.5">Laporan: ${m.laporan}</p>` : ''}
+          </div>
+        `;
+      });
+      content.innerHTML = html;
+    }
+
+    // --- MENU 4: FORM LEMBUR MULTI-ENTRY (PERBAIKAN UTAMA) ---
     function tambahBarisLembur() {
       const list = document.getElementById('listBarisLembur');
       const index = list.children.length + 1;
@@ -957,33 +1071,44 @@
       const container = document.getElementById('riwayatLemburContainer');
       container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Memuat riwayat lembur...</p>';
 
-      const snapshot = await db.collection('lembur_logs')
-        .where('userName', '==', currentUserState.name)
-        .orderBy('createdAt', 'desc')
-        .get();
+      try {
+        const snapshot = await db.collection('lembur_logs')
+          .where('userName', '==', currentUserState.name)
+          .get();
 
-      if (snapshot.empty) {
-        container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Belum ada riwayat lembur bulan ini.</p>';
-        return;
-      }
+        if (snapshot.empty) {
+          container.innerHTML = '<p class="text-xs text-slate-500 font-bold uppercase">Belum ada riwayat lembur tercatat.</p>';
+          return;
+        }
 
-      container.innerHTML = '';
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        let rincianHTML = '';
-        d.rincian.forEach((r, idx) => {
-          rincianHTML += `<div class="text-[11px] text-slate-700 mt-1 pl-2 border-l-2 border-[#FF4B18]"><strong>Sesi ${idx+1} (${r.mulai} - ${r.selesai}):</strong> ${r.deskripsi}</div>`;
-        });
+        let listLembur = [];
+        snapshot.forEach(doc => listLembur.push(doc.data()));
+        
+        // Urutkan dari tanggal terbaru secara lokal
+        listLembur.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
-        container.innerHTML += `
-          <div class="p-3 bg-white border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919]">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono bg-[#050505] text-[#FFD994] px-2 py-0.5 font-bold">${d.tanggal}</span>
+        container.innerHTML = '';
+        listLembur.forEach(d => {
+          let rincianHTML = '';
+          if (d.rincian && Array.isArray(d.rincian)) {
+            d.rincian.forEach((r, idx) => {
+              rincianHTML += `<div class="text-[11px] text-slate-700 mt-1 pl-2 border-l-2 border-[#FF4B18]"><strong>Sesi ${idx+1} (${r.mulai} - ${r.selesai}):</strong> ${r.deskripsi}</div>`;
+            });
+          }
+
+          container.innerHTML += `
+            <div class="p-3 bg-white border-2 border-[#191919] shadow-[3px_3px_0px_0px_#191919]">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono bg-[#050505] text-[#FFD994] px-2 py-0.5 font-bold">Tanggal: ${d.tanggal}</span>
+              </div>
+              ${rincianHTML}
             </div>
-            ${rincianHTML}
-          </div>
-        `;
-      });
+          `;
+        });
+      } catch (err) {
+        console.error("Error load lembur:", err);
+        container.innerHTML = '<p class="text-xs text-red-600 font-bold uppercase">Gagal memuat riwayat lembur.</p>';
+      }
     }
 
     function subscribeRealtimeHrdLogs() {
@@ -1107,7 +1232,7 @@
     }
 
     function closeModalFoto() {
-      document.getElementById('modalFoto').classList.add('hidden');
+      document.getElementById('modalBox'] || document.getElementById('modalFoto').classList.add('hidden');
     }
   </script>
 </body>
